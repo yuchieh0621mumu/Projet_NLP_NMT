@@ -56,15 +56,12 @@ projet/
    python scripts/preprocess.py --source data/corpus_source --target data/corpus_cible
    ```
 
-2. Lancement de l'alignement :
-   ```bash
-   python scripts/align.py --config config/config.yaml
-   ```
+2. **Lancement de l'alignement** :
+   Ouvrez le notebook Jupyter `scripts/align.ipynb` dans Jupyter et exécutez chaque cellule pour effectuer le processus d'alignement.
 
-3. Évaluation des résultats :
-   ```bash
-   python scripts/evaluate.py --aligned data/aligned_output
-   ```
+3. **Évaluation des résultats** :
+   Ouvrez le notebook Jupyter `scripts/evaluate.ipynb` dans Jupyter et exécutez chaque cellule pour évaluer les résultats d'alignement dans `data/aligned_output.txt`.
+
 
 
 

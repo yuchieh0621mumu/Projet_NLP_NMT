@@ -27,13 +27,12 @@ Traduction française de la présentation, comprenant :
 - PyTorch
 - Transformers (Hugging Face)
 - BERTalign
-- Autres dépendances spécifiques
 
 ## Installation
 ```bash
 # Création de l'environnement virtuel
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
+source venv/bin/activate  
 git clone https://github.com/bfsujason/bertalign
 pip install -r requirements.txt
 ```
@@ -74,6 +73,24 @@ Les résultats de l'alignement sont stockés dans le dossier `data/aligned_outpu
 - Fichiers alignés au format txt
 - Métriques d'alignement
 - Logs détaillés
+
+### Évaluation des résultats
+Pour évaluer la qualité de l'alignement, nous avons utilisé la métrique BLEU (Bilingual Evaluation Understudy). La métrique BLEU mesure la proximité entre les phrases alignées et les références, en se basant sur le recouvrement n-grammes.
+
+La formule BLEU est la suivante :
+
+```
+BLEU = BP * exp(Σ(wn * log(pn)))
+```
+
+Où :
+- BP est le "Brevity Penalty" qui pénalise les alignements trop courts
+- wn sont les poids des n-grammes (typiquement w1=0.25, w2=0.25, w3=0.25, w4=0.25)
+- pn sont les précisions des n-grammes
+
+La valeur BLEU varie entre 0 et 1, 1 indiquant une correspondance parfaite entre l'alignement et la référence.
+
+Nous avons calculé les scores BLEU moyens pour l'ensemble du corpus aligné, ainsi que des scores par paire de phrases alignées. Ces métriques nous permettent d'évaluer la qualité globale de l'alignement et d'identifier les zones qui nécessiteraient des ajustements.
 
 ## Dépannage
 Solutions aux problèmes courants :

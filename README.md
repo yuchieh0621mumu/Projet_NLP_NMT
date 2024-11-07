@@ -1,6 +1,21 @@
 
 # Projet d'alignement de corpus bilingue avec BERTalign
 
+## Bertalign, un aligneur sophistiqué
+
+Bertalign utilise BERT et Transformers, impliquant souvent des techniques d'apprentissage automatique telles que les réseaux neuronaux. 
+Ils gèrent mieux le contexte, la sémantique et les structures syntaxiques, permettant une compréhension plus approfondie du langage et des alignements plus précis. Ceux-ci peuvent inclure des modèles tels que des architectures basées sur des Transformers,qui peuvent gérer efficacement la désambiguïsation du sens des mots, les expressions idiomatiques et les significations contextuelles. 
+
+Bertalign est conçu pour faciliter la construction de corpus parallèles multilingues et de mémoires de traduction, qui ont une large gamme d'applications dans la recherche liée à la traduction, comme les études de traduction basées sur des corpus, la linguistique contrastive, la traduction assistée par ordinateur, la formation des traducteurs et la traduction automatique.
+Approche : Bertalign utilise des transformers de phrases pour représenter les phrases sources et cibles, afin que les phrases sémantiquement similaires dans différentes langues soient mappées sur des espaces vectoriels similaires. Ensuite, un algorithme en deux étapes basé sur la programmation dynamique est exécuté : 
+1) L'étape 1 trouve les alignements 1-1 pour les points d'ancrage approximatifs 
+2) L'étape 2 limite le chemin de recherche aux points d'ancrage et extrait tous les alignements valides avec des relations 1-plusieurs, plusieurs-1 ou plusieurs-à-plusieurs entre les phrases source et cible.
+
+Langues prises en charge : Alignement entre 25 langues (ex. chinois (zh), anglais (en), français (fr)). Importez simplement Bertalign et initialisez-le avec le texte source et cible, qui détectera automatiquement la langue source et cible et divisera les deux textes en phrases. Ensuite, imprimez le résultat avec print_sents().
+
+Performances : Selon Thompson & Koehn (2019), Bertalign obtient des résultats plus précis sur Text+Berg.(https://aclanthology.org/D19-1136/)
+
+
 ## Description
 Ce projet utilise BERTalign pour effectuer l'alignement automatique entre deux corpus bilingues. BERTalign exploite les embeddings contextuels de BERT pour établir des correspondances précises entre les phrases de différentes langues.
 

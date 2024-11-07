@@ -1,0 +1,1410 @@
+Hi, this is Elena and I'm going to be presenting our work, Detecting Unassimilated Borrowings in Spanish: An Annotated Corpus and Approaches to Modeling.
+Bonjour, je m’appelle Elena et je vais vous présenter notre travail, détecter les emprunts non assimilés en espagnol : un corpus annoté et des approches de modélisation.
+
+So we're going to be covering what lexical borrowing is, the task that we proposed, the dataset that we have released and some models that we explored.
+Nous allons donc couvrir ce qu’est l’emprunt lexical, la tâche que nous avons proposée, les données que nous avons publiées et certains modèles que nous avons explorés.
+
+But to begin with, what is lexical borrowing and why it matters as an NLP task?
+Mais pour commencer, qu’est-ce que l’emprunt lexical et pourquoi est-ce important en tant que tâche de TAL traitement automatique du langage naturel ?
+
+Well, lexical borrowing is basically the incorporation of words from one language into another language.
+Eh bien, l’emprunt lexical est fondamentalement l’incorporation de mots d’une langue dans une autre langue.
+
+For instance, in Spanish we use words that come from English.
+Par exemple, en espagnol, nous utilisons des mots qui viennent de l’anglais.
+
+And here you have a few examples, words such as podcast, app, and online crowdfunding, all these are English words that we sometimes use in Spanish.
+Et ici, vous avez quelques exemples : des mots tels que podcast, app et crowdfunding en ligne ; tous ces mots sont des mots anglais que nous utilisons parfois en espagnol.
+
+Lexical borrowing is a type of linguistic borrowing um which is basically reproducing in one language patterns of other languages.
+L’emprunt lexical est un type d’emprunt linguistique qui consiste essentiellement à reproduire dans une langue des modèles d’autres langues.
+
+And borrowing and code switching have sometimes been compared and described as a continuum, code switching being ah the thing that bilinguals do where they mix two languages at the same time.
+Et l’emprunt et l’alternance codique ont parfois été comparés et décrits comme un continuum, l’alternance codique étant la chose que font les bilingues lorsqu’ils mélangent deux langues en même temps.
+
+There are however some differences between lexical borrowing and code-switching.
+Il y a cependant quelques différences entre l’emprunt lexical et l’alternance codique.
+
+We're going to be focusing on lexical borrowing.
+Nous allons nous concentrer sur l’emprunt lexical.
+
+Code switching is something that is done by bilinguals and by definition the code switches are not integrated into any of the languages in use, whereas lexical borrowing is something that is also done by monolinguals.
+L’alternance codique est quelque chose qui est fait par les bilingues et par définition, les alternances codiques ne sont pas intégrées dans l’une des langues utilisées, alors que l’emprunt lexical est quelque chose qui est également fait par les monolingues.
+
+The borrowings will comply with the grammar of the recipient language.
+Les emprunts seront conformes à la grammaire de la langue du destinataire.
+
+And borrowings can eventually be integrated into the recipient language.
+Et les emprunts peuvent éventuellement être intégrés dans la langue du destinataire.
+
+So why is borrowing an interesting phenomenon?
+Alors pourquoi emprunter un phénomène intéressant ?
+
+Well, from the point of view of linguistics, borrowing is a manifestation of of how languages change and how they interact.
+Eh bien, du point de vue de la linguistique, l’emprunt est une manifestation de la façon dont les langues changent et comment elles interagissent.
+
+And also lexical borrowings are a source of new words.
+Et aussi, les emprunts lexicaux sont une source de nouveaux mots.
+
+Here you have some examples of lexical borrowings that have been incorporated into the Spanish language as new words.
+Ici, vous avez quelques exemples d’emprunts lexicaux qui ont été incorporés dans la langue espagnole en tant que nouveaux mots.
+
+In terms of NLP ah borrowings are a common source of out-of-vocabulary words.
+En termes de TAL traitement automatique du langage naturel, les emprunts sont une source courante de mots hors-vocabulaire.
+
+And in fact, automatically detecting lexical borrowings ah has proven to be useful for NLP downstream tasks such as parsing, text-to-speech synthesis or machine translation.
+Et en effet, détecter automatiquement les emprunts lexicaux s’est avéré utile pour les tâches downstream de TAL traitement automatique du langage naturel telles que l’analyse syntaxique, la synthèse texte-parole ou la traduction automatique.
+
+There has been a growing interest in the influence of English on other languages ah particularly ah related to English lexical borrowings, borrowings which sometimes have been called Anglicisms.
+Il y a eu un intérêt croissant pour l’influence de l’anglais sur d’autres langues, en particulier les emprunts lexicaux anglais, des emprunts qui ont parfois été appelés anglicismes.
+
+And here, you have some examples of ah work on automatic detection of borrowings in ah some of these languages.
+Et ici, vous avez quelques exemples de travail sur la détection automatique des emprunts dans certaines de ces langues.
+
+So the task that we propose is to detect unassimilated lexical borrowings in Spanish newswire.
+Donc, la tâche que nous proposons est de détecter les emprunts lexicaux non assimilés dans le fil d’actualité espagnol.
+
+Which means that we are interested in extracting ah words borrowed from other languages that are being used in Spanish newspapers but that have not been integrated or assimilated into the recipient language.
+Ce qui signifie que cela nous intéresse d'extraire les mots empruntés à d’autres langues qui sont utilisés dans les journaux espagnols, mais qui n’ont pas été intégrés ou assimilés dans la langue du destinataire.
+
+So not yet integrated into Spanish.
+Donc pas encore intégrés à l’espagnol.
+
+Here you have an example.
+Vous avez ici un exemple.
+
+This is a sentence in Spanish: Las prendas bestsellers se estampan con motivos florales, animal print o retales tipo patchwork.
+Ceci est une phrase en espagnol : Las prendas bestsellers se estampan con motivos florales, animal print o retales tipo patchwork.
+
+Um, and as you can see, there are three spans of texts which are actually English words like bestseller, animal print and patchwork.
+Hum, et comme vous pouvez le voir, il y a trois étendages de textes qui sont en réalité des mots anglais comme bestseller, animal print et patchwork.
+
+These are the type of spans that we are interested in extracting and detecting.
+Il s’agit du type d’étendages qu'il nous intéresse d'extraire et de détecter.
+
+There has been previous word on Anglicism detection ah which consists consisted of a CRF model for Anglicism detection on Spanish Newswire.
+Il y a eu un mot antérieur sur la détection de l’anglicisme qui consiste en un modèle CRF pour la détection de l’anglicisme sur le fil d’actualité espagnol.
+
+This model achieved an F1 score of eighty six.
+Ce modèle a obtenu un score F1 de quatre-vingt-six.
+
+But there were some limitations both um in the dataset and the modeling approach.
+Mais il y avait des limites à la fois dans les données et dans l’approche de modélisation.
+
+So the dataset focused exclusively on one source of news, consisted only of headlines.
+Ainsi, les données se concentraient exclusivement sur une source d'actualités, ne comprenaient que des titres.
+
+And also there was an overlap in the borrowings that appear in the training set and the test set.
+Et il y avait aussi un chevauchement dans les emprunts qui apparaissent dans l’ensemble de formation et l’ensemble de test.
+
+This prevented the assessment of whether the modeling approach could actually generalize to previously unseen borrowings.
+Cela a empêché d’évaluer si l’approche de modélisation pouvait effectivement se généraliser aux emprunts précédemment invisibles.
+
+So what we aim is to tackle some of these limitations in the task.
+Nous visons donc à nous attaquer à certaines de ces limites dans la tâche.
+
+So to begin we, to begin with, we created a new dataset.
+Alors, pour commencer, nous avons créé de nouvelles données.
+
+Ah the aim at a new dataset that was annotated with lexical borrowings and the aim was to create a test set that was as difficult as possible.
+Avec de nouvelles données qui ont été annotées avec des emprunts lexicaux, le but était de créer un ensemble de test aussi difficile que possible.
+
+So there would be minimal overlap in words and topics between the training set and test set.
+Il y aurait donc un chevauchement minimal entre les mots et les sujets entre l’ensemble de formation et l’ensemble de test.
+
+And as a result, well, the test set comes from sources and dates that we're not seeing in the training set.
+Et par conséquent, eh bien, l’ensemble de test provient de sources et de dates que nous ne voyons pas dans l’ensemble de formation.
+
+Here you can see that there's no overlap in the in the time.
+Ici, vous pouvez voir qu’il n’y a pas de chevauchement dans le temps.
+
+It's also, the test set is also very borrowing-dense.
+L’ensemble de test est aussi très dense en termes d’emprunt.
+
+Just to give you some numbers, if the training set contains six borrowings per each thousand tokens, the test set contained twenty borrowings per each thousand tokens.
+Juste pour vous donner quelques chiffres, si l’ensemble de formation contient six emprunts pour mille gages, l’ensemble de test contenait vingt emprunts pour mille gages.
+
+The test set contained as many out of vocabulary words as possible.
+L’ensemble de test contenait autant de mots hors-vocabulaire que possible.
+
+In fact, ninety two percent of the borrowings in the test set are OOV.
+En effet, quatre-vingt-douze pour cent des emprunts dans l’ensemble de test sont des OOV.
+
+So, they were not seen during training.
+Ils n’ont donc pas été vus pendant la formation.
+
+And the corpus consisted basically of a collection of texts that came from different sources of Spanish newspapers.
+Et le corpus consistait essentiellement en une collection de textes provenant de différentes sources de journaux espagnols.
+
+And ah it was annotated by hand ah using two tags.
+Et il a été annoté à la main en utilisant deux étiquettes.
+
+One for English lexical borrowings which is the majority of lexical borrowings in Spanish, and then the label other for borrowings from other languages.
+Une pour les emprunts lexicaux anglais, constituant la majorité des emprunts lexicaux en espagnol, puis l’autre étiquette pour les emprunts d’autres langues.
+
+We use CONLL formats and we used BIO encoding so that we could encode ah single token borrowings such as app or multi token borrowings such as machine learning.
+Nous utilisons les formats CoNLL et avons utilisé l’encodage BIO pour pouvoir encoder des emprunts de gages simples tels que app ou des emprunts de gages multiples tels que l'apprentissage automatique.
+
+These are the numbers of the corpus.
+Ce sont les chiffres du corpus.
+
+As you can see, it amounts to roughly three hundred seventy thousand tokens.
+Comme vous pouvez le voir, il s’élève à environ trois cent soixante-dix mille gages.
+
+And here you have the number of spans that were labeled as English and the spans that were labeled as other borrowings and how many of them were unique.
+Et ici, vous avez le nombre d’étendages qui ont été étiquetés comme anglais et les étendages qui ont été étiquetés comme autres emprunts, et combien d’entre eux étaient uniques.
+
+And here you have a couple of examples of the of the set of the dataset.
+Et ici, vous avez quelques exemples de l’ensemble des données.
+
+As you can see for instance here, we have ah in the first example, we have the borrowing batch cooking which is a multi word borrowing.
+Comme vous pouvez le voir ici, par exemple, nous avons dans le premier exemple le batch cooking emprunteur qui est un emprunt de mots multiples.
+
+And we have annotated it using the BIO um encode.
+Et nous l’avons annoté en utilisant l’encodage BIO.
+
+So the BIO was used for words in Spanish so not for words that were not borrowed.
+Donc le BIO a été utilisé pour des mots en espagnol, et non pour des mots qui n’ont pas été empruntés.
+
+And here in this second example, you have benching and crash which are also labeled as borrowings from English.
+Et ici, dans ce deuxième exemple, vous avez benching et crash qui sont également étiquetés comme des emprunts de l’anglais.
+
+So, once we had the dataset, we explored several models for the task of extracting and detecting these lexical borrowings.
+Donc, une fois que nous avons eu les données, nous avons exploré plusieurs modèles pour la tâche d’extraction et de détection de ces emprunts lexicaux.
+
+The first one that we tried was the conditional random field model.
+Le premier que nous avons essayé était le modèle de champ aléatoire conditionnel.
+
+Ah, this was the model that had been used on previous work.
+Ah, c’était le modèle qui avait été utilisé sur le travail antérieur.
+
+And we used the same handcrafted features from that from those from that work.
+Et nous avons utilisé les mêmes fonctions faites main à partir de celles de ce travail.
+
+As you can see, these are the features.
+Comme vous pouvez le voir, voici les fonctions.
+
+These are binary features such as the word or the token in upper case?
+Ce sont des fonctions binaires telles que le mot ou le gage en majuscules ?
+
+Is it title titlecase?
+Est-ce une casse de titre ?
+
+Is it a quotation mark?
+Est-ce un guillemet ?
+
+Things like that, which are the type of features that one would expect in a named entity recognition task.
+Des choses comme ça, qui sont le type de fonctions que l’on attendrait d’une tâche de named entity recognition.
+
+These are the results that we got.
+Voici les résultats que nous avons obtenus.
+
+We obtain fifty five F1 score using the the CRF model with handcrafted features.
+Nous obtenons cinquante-cinq points en F1 en utilisant le modèle CRF avec des fonctions faites main.
+
+Which is a huge different difference um compared to the reported F1 score of eighty six, which was the result obtained with the same CRF model, same features but on a different dataset also for Spanish lexical borrowing detection.
+Ce qui est une énorme différence comparée au score F1 de quatre-vingt-six rapporté, qui était le résultat obtenu avec le même modèle CRF, les mêmes fonctions mais sur des données différentes également pour la détection de l’emprunt lexical espagnol.
+
+So, this proves that the dataset that we created is more difficult and that we needed to explore more sophisticated models for these tasks.
+Donc, cela prouve que les données que nous avons créées sont plus difficiles et que nous devions explorer des modèles plus sophistiqués pour ces tâches.
+
+So, we tested two transformer based models.
+Nous avons donc testé deux modèles basés sur la conversion.
+
+We used BETO which is a monolingual BERT model trained for Spanish and also multilingual BERT.
+Nous avons utilisé BETO qui est un modèle de Représentations d'encodeurs bidirectionnels à partir de transformateurs monolingue formé pour l’espagnol, mais aussi des Représentations d'encodeurs bidirectionnels à partir de transformateurs multilingues.
+
+Both models we use them through the transformers library by HuggingFace.
+Nous utilisons les deux modèles à travers la bibliothèque de conversion d’HuggingFace.
+
+These are the results that we got.
+Voici les résultats que nous avons obtenus.
+
+As you can see, multilingual BERT performs better than BETO both on the development set and on the test set and across all metrics.
+Comme vous pouvez le voir, les Représentations d'encodeurs bidirectionnels à partir de transformateurs multilingues fonctionnent mieux que les BETO à la fois sur l’ensemble de développement et sur l’ensemble de test, et à travers tous les indicateurs.
+
+Just so we have ah an idea to compare, the CRF model obtained an eighty two.
+Juste pour que nous ayons une idée à comparer, le modèle CRF a obtenu un quatre-vingt-deux.
+
+The CRF model obtained a fifty five obtained a fifty five F1 score, whereas the multilingual BERT obtained eighty two, which is a big difference.
+Le modèle CRF a obtenu cinquante-cinq points en F1, tandis que les Représentations d'encodeurs bidirectionnels à partir de transformateurs multilingues ont obtenu quatre-vingt-deux, ce qui est une grande différence.
+
+So, once that we had those results, we asked ourselves another question which is, could we find a BiLSTM-CRF model, feed it with different types of embeddings, embeddings that encode different types of linguistic information and perform outperform the results obtained by transformer based models?
+Donc, une fois que nous avons eu ces résultats, nous nous sommes posés une autre question qui est : pourrions-nous trouver un modèle BiLSTM-CRF, l’alimenter avec différents types d’intégrations, des intégrations qui encodent différents types d’informations linguistiques, et dépasser les résultats obtenus par les modèles basés sur la conversion ?
+
+So in order to do so, we ran some preliminary experiments, we we run this by BiLSTM-CRF model using flare library.
+Donc, pour ce faire, nous avons effectué quelques expériences préliminaires ; nous avons exécuté ceci par le biais du modèle BiLSTM-CRF en utilisant la bibliothèque Flare.
+
+And we tried experimented with different type of embeddings like transformer-based but also fast-text, character embeddings, and so on.
+Et nous avons essayé d’expérimenter différents types d’intégrations comme celles basées sur la conversion, mais aussi des intégrations de caractères, de texte rapide et ainsi de suite.
+
+What we found out was that transformer-based embeddings performed better than non contextualized embeddings, that the combination of English BERT and Spanish BETO embeddings outperform multilingual BERT embeddings.
+Ce que nous avons découvert, c’est que les intégrations basées sur la conversion ont obtenu de meilleurs résultats que les intégrations non contextualisées, et que la combinaison d’intégrations de Représentations d'encodeurs bidirectionnels à partir de transformateurs en anglais et de BETO en espagnol dépasse les intégrations de Représentations d'encodeurs bidirectionnels à partir de transformateurs multilingues.
+
+And that BPE embeddings produced better F1 and character embeddings produce better recall.
+Et aussi, que les intégrations de BPE produisent un meilleur F1 et les intégrations de caractères, un meilleur rappel.
+
+With that in mind, these were the best performing results that we got.
+Dans cet esprit, ce sont les meilleurs résultats que nous avons obtenus.
+
+Both models were BiLSTM-CRF models using flare.
+Les deux modèles étaient des modèles BiLSTM-CRF utilisant Flare.
+
+One was fed with BETO and BERT embeddings and BPE, and the other one BETO and BERT embeddings and BPE and also character embeddings.
+L’un a été alimenté avec des intégrations de BETO, de Représentations d'encodeurs bidirectionnels à partir de transformateurs et de BPE, et l’autre avec des intégrations de BETO, de Représentations d'encodeurs bidirectionnels à partir de transformateurs, de BPE et aussi des intégrations de caractères.
+
+This last one was the one that produced the highest F1 score on the test set, although the highest score on the development set was obtained by the one without character embeddings.
+Ce dernier était celui qui a produit le score F1 le plus élevé sur l’ensemble de test, bien que le score le plus élevé sur l’ensemble de développement ait été obtenu par celui sans intégrations de caractères.
+
+Just ah to bear in mind that the best result that we got with multilingual BERT obtained an F1 of seventy six on the development set and eighty two on the test set.
+Gardons juste à l’esprit que le meilleur résultat que nous avons obtenu avec Représentations d'encodeurs bidirectionnels à partir de transformateurs multilingues était un F1 de soixante-seize sur l’ensemble de développement et quatre-vingt-deux sur l’ensemble de test.
+
+So this is an improvement compared to those results.
+C’est donc une amélioration comparée à ces résultats.
+
+Finally, we asked ourselves another question which was can lexical borrowing detection be framed as transfer learning from language identification in code switching?
+Enfin, nous nous sommes posés une autre question qui était de savoir si la détection d’emprunt lexical pouvait être encadrée comme apprentissage par transfert de l’identification de langue dans l’alternance codique ?
+
+So, we run the same BiLSTM-CRF model that we had run using flare, but instead of using these unadapted transformer-based BETO and BERT embeddings, we used code switch embeddings.
+Nous exécutons alors le même modèle BiLSTM-CRF que nous avions exécuté en utilisant Flare, mais au lieu d’utiliser ces intégrations de BETO et Représentations d'encodeurs bidirectionnels à partir de transformateurs basées sur la conversion non adaptées, nous avons utilisé les intégrations d’alternance codique.
+
+What are code switch embeddings?
+Qu’est-ce que les intégrations d’alternance codique ?
+
+Well these are um embeddings that are have been fine tuned transformer-based embeddings that have been pretrained for language identification on the Spanish English section of the LinCE code switching dataset.
+Eh bien, ce sont des intégrations qui ont été des intégrations basées sur la conversion ajustée, qui ont été préformées pour l’identification de langue sur la section anglaise espagnole des données d’alternance codique LinCE.
+
+LinCE is a dataset on code switching that has a section on Spanish English, Spanish English code switching.
+LinCE est un ensemble de données sur l’alternance codique qui comporte une section sur l’anglais espagnol, l’alternance codique anglais espagnol.
+
+So we fed our BiLSTM-CRF with code switch embeddings and optionally character embeddings, BPE embeddings and so on.
+Nous avons donc alimenté notre BiLSTM-CRF avec des intégrations d’alternance codique et éventuellement des intégrations de caractères, des intégrations de BPE et ainsi de suite.
+
+The best result that we got was eighty four point twenty two, which is the highest across all the models that we tried on the test set.
+Le meilleur résultat que nous avons obtenu était quatre-vingt-quatre points vingt-deux, ce qui est le plus élevé parmi tous les modèles que nous avons essayés sur l’ensemble de test.
+
+Although the best result F1 score that we got on the development set, which was seventy nine, was lower than the best result obtained by the BiLSTM-CRF fed with unadapted embeddings.
+Bien que le meilleur score F1 que nous ayons obtenu sur l’ensemble de développement, qui était de soixante-dix-neuf, était inférieur au meilleur résultat obtenu par le BiLSTM-CRF alimenté avec des intégrations non adaptées.
+
+So, some conclusions from our work.
+Voilà donc les conclusions de notre travail.
+
+We have ah we have produced a new dataset of Spanish newswire that is annotated with unassimilated lexical borrowings.
+Nous avons produit de nouvelles données de fil d’actualité espagnol qui sont annotées avec des emprunts lexicaux non assimilés.
+
+This dataset is more borrowing dense and OOV-rich than previous resources.
+Ces données sont plus denses en matière d’emprunt et riches en OOV par rapport aux ressources antérieures.
+
+We have explored four types of models for lexical borrowing detection.
+Nous avons exploré quatre types de modèles pour la détection d’emprunt lexical.
+
+Um.
+Hum.
+
+In terms of error analysis, well, recall was a weak point for all models.
+En termes d’analyse des erreurs, eh bien, le rappel était un point faible pour tous les modèles.
+
+Ah, as you can see here, some frequent false negatives include uppercase borrowings, words that exist in both English and Spanish, for instance.
+Ah, comme vous pouvez le voir ici, certains faux négatifs fréquents incluent des emprunts en majuscules, des mots qui existent à la fois en anglais et en espagnol, par exemple.
+
+Also interestingly, BPE embeddings seem to improve F1 score.
+Il est également intéressant de noter que les intégrations de BPE semblent améliorer le score F1.
+
+And character embedding seem to improve recall.
+Et l’intégration de caractères semble améliorer le rappel.
+
+Which ah it's an interesting finding that perhaps we can explore on future work.
+Ce qui est une découverte intéressante que peut-être nous pouvons explorer sur les travaux futurs.
+
+Um.
+Hum.
+
+Well, this is everything that I have.
+Eh bien, c’est tout ce que j’ai.
+
+Thank you so much for listening.
+Merci beaucoup pour votre écoute.
+
+My name is Antoine.
+Je m’appelle Antoine.
+
+I'm a PhD student at the University of Massachusetts Amherst.
+Je suis doctorant à l’Université du Massachusetts à Amherst.
+
+I am presenting our paper KinyaBERT: a Morphology-aware Kinyarwanda Language Model.
+Je vous présente notre article KinyaBERT : un modèle de langue en kinyarwanda conscient de la morphologie.
+
+Today, I'll talk about the motivation for this research.
+Aujourd’hui, je vais parler de la motivation pour ces recherches.
+
+Then I'll present KinyaBERT model architecture in detail.
+Ensuite, je présenterai en détail l’architecture du modèle KinyaBERT.
+
+I'll then talk about our experimental results, then finish with some conclusions.
+Je parlerai ensuite de nos résultats expérimentaux, puis je terminerai par quelques conclusions.
+
+We all know that recent natural language processing advances have been made possible by the use of pretrained language models such as BERT.
+Nous savons tous que les progrès récents du traitement du langage naturel ont été rendus possibles par l’utilisation de modèles de langues préformées tels que les Représentations d'encodeurs bidirectionnels à partir de transformateurs.
+
+However, there are still a number of limitations.
+Cependant, il y a encore un certain nombre de limitations.
+
+Due to the complex morphology that is expressed by most morphologically rich languages, the ubiquitous byte pair encoding tokenization algorithm that I used cannot extract the exact subword lexical units, meaning the morphemes, which are needed for effective representation.
+En raison de la morphologie complexe qui est exprimée par la plupart des langues morphologiquement riches, l’algorithme de marquage byte pair encoding omniprésent que j’ai utilisé ne peut pas extraire les unités lexicales sous-mots exactes, signifiant les morphèmes, qui sont nécessaires pour une représentation efficace.
+
+For example, here we have three Kinyarwanda words that have several morphemes in them, but the BPE algorithms cannot extract them.
+Par exemple, ici, nous avons trois mots en kinyarwanda ayant plusieurs morphèmes en eux, mais les algorithmes de BPE ne peuvent pas les extraire.
+
+This is because some morphological rules produce different surface forms that hide the exact lexical information, and BPE, which is solely based on the surface forms, does not have access to this lexical model.
+En effet, certaines règles morphologiques produisent différentes formes de surface qui cachent l’information lexicale exacte, et le BPE, qui est uniquement basé sur les formes de surface, n’a pas accès à ce modèle lexical.
+
+The second challenge is that even if one had access to an oracle morphological analyzer, replacing BPE tokens with morphemes is not enough to express the morphological compositionality.
+Le deuxième défi est que même si l’on avait accès à un analyseur morphologique oracle, remplacer les gages de BPE par des morphèmes n’est pas suffisant pour exprimer la compositionnalité morphologique.
+
+A third gap in the research is that new pretrained language models are most often evaluated on high resource languages.
+Une troisième lacune dans les recherches est que les nouveaux modèles de langue préformée sont le plus souvent évalués sur des langues à ressources élevées.
+
+And we need to assess their applicability on low resources and diverse languages as well.
+Et nous devons évaluer leur applicabilité sur des ressources faibles et diverses langues également.
+
+Therefore, we present KinyaBERT, which is a simple but effective adaptation of the BERT architecture that is meant to more effectively handle morphologically rich languages.
+Par conséquent, nous présentons KinyaBERT, qui est une adaptation simple mais efficace de l’architecture des Représentations d'encodeurs bidirectionnels à partir de transformateurs destinée à gérer plus efficacement les langues morphologiquement riches.
+
+We evaluate KinyaBERT on Kinyarwanda, a low resource morphologically rich language, which is spoken by more than twelve million people across Eastern and Central Africa.
+Nous évaluons KinyaBERT sur le kinyarwanda, une langue low resource riche morphologiquement, qui est parlée par plus de douze millions de personnes à travers l’Afrique de l’Est et centrale.
+
+The input to the model is either a sentence or a document.
+La saisie du modèle est soit une phrase, soit un document.
+
+For example here, we have John twarahamubonye biradutangaza, which means we were surprised to find John there.
+Par exemple, ici, nous avons John twarahamubonye biradutangaza, qui signifie « nous avons été surpris de trouver John là-bas ».
+
+As you can see, Kinyarwanda words contains several morphemes that contain different information in them.
+Comme vous pouvez le voir, les mots en kinyarwanda comprennent plusieurs morphèmes qui renferment différentes informations.
+
+Therefore, in our model, we pass this sentence or a document to a morphological analyzer.
+Par conséquent, dans notre modèle, nous faisons passer cette phrase ou un document à un analyseur morphologique.
+
+Which then generates morphemes contained in each of the words.
+Ce qui engendre alors des morphèmes contenus dans chacun des mots.
+
+The morphemes usually are made of the stem and zero or more affixes.
+Les morphèmes sont généralement constitués du radical et de zéro ou plus d’affixes.
+
+The affixes may indicate tense, aspect, subject or object in verbs, and more often relates to the Bantu noun class for subjects and objects.
+Les affixes peuvent indiquer le temps, l’aspect, le sujet ou l’objet dans les verbes, et se rapportent plus souvent à la classe nom bantoue pour les sujets et les objets.
+
+The morphological analyzer also produces a part of speech tag for each of the words.
+L’analyseur morphologique produit également une étiquette de partie de discours pour chacun des mots.
+
+After this step, we make embeddings for the spee- for the part of speech tags.
+Après cette étape, nous faisons des intégrations pour le dis- pour les étiquettes de la partie de discours.
+
+Embeddings for the affixes.
+Intégrations pour les affixes.
+
+And embeddings for the stem.
+Et intégrations pour le radical.
+
+These are the morphology level, these are the morphology level embeddings.
+Il s’agit du niveau morphologique ; il s’agit des intégrations de niveau morphologique.
+
+We then pass these embeddings through a morphology encoder, which is a small transformer encoder that is applied to each word independently.
+Nous faisons ensuite passer ces intégrations à travers un encodeur morphologique, qui est un petit encodeur de conversion appliqué à chaque mot indépendamment.
+
+The output of the are the vectors that are contextualized with the morphological information at each word.
+Les résultats sont les vecteurs contextualisés avec les informations morphologiques à chaque mot.
+
+Now, we perform composition where the morphological embeddings corresponding to part of speech and stem are concatenated together.
+Maintenant, nous effectuons une composition où les intégrations morphologiques correspondant à une partie de discours et au radical sont concaténées ensemble.
+
+We further concat we further concatenate them with another stem embedding at the sentence level.
+Nous les concaténons en outre avec une autre intégration du radical au niveau de la phrase.
+
+Then we form an input to the main sentence or document encoder.
+Ensuite, nous formons une saisie à la phrase principale ou l’encodeur de document.
+
+The final output are contextualized embeddings that can be used for downstream NLP tasks.
+Le résultat final donne des intégrations contextualisées qui peuvent être utilisées pour les tâches de TAL traitement automatique du langage naturel downstream.
+
+For a morphological analyzer, we use finite state two level morphology principles with custom implementation that is tailored to the Kinyarwanda language.
+Pour un analyseur morphologique, nous utilisons des principes de morphologie à deux niveaux à états finis avec une mise en œuvre personnalisée adaptée à la langue kinyarwanda.
+
+We effectively model the morphology of all Kinyarwanda words, including verbals, nouns, demonstrative and possessive pronouns, numerals, and others.
+Nous modélisons efficacement la morphologie de tous les mots en kinyarwanda, y compris les verbes, les noms, les pronoms démonstratifs et possessifs, les chiffres et autres.
+
+We use an unsupervised part of speech tagging algorithm.
+Nous utilisons une partie non supervisée d’algorithme de classification de discours.
+
+A first order factored model is used to account for morphology probability, basically the probability that is assigned by the morphological analyzer.
+Un modèle factorisé de premier ordre est utilisé pour rendre compte de la probabilité morphologique, essentiellement la probabilité attribuée par l’analyseur morphologique.
+
+We also take into consideration the part of speech tag precedence as well as the syntactic agreements that are present in the in the input words.
+Nous prenons également en considération la priorité de l’étiquette de la partie de discours ainsi que les accords syntaxiques qui sont présents dans les mots de saisie.
+
+The part of speech tagger uses a bidi bidirectional inference which improves upon the more often used Viterbi algorithm for decoding.
+Le marqueur de partie de discours utilise une inférence bidirectionnelle bidi qui améliore le plus souvent l’algorithme Viterbi utilisé pour le décodage.
+
+A few remarks here for positional encoding.
+Quelques remarques ici pour l'encodage positionnel.
+
+One, the morphology encoder does not use any positional encoding.
+Premièrement, l’encodeur morphologique n’utilise aucun encodage positionnel.
+
+This is because each of the morphemes occupies a known slot in the morphological model.
+C’est parce que chacun des morphèmes occupe un emplacement connu dans le modèle morphologique.
+
+Therefore, positional information is inherent when the morphemes are given.
+Par conséquent, l’information positionnelle est inhérente lorsque les morphèmes sont donnés.
+
+Second, the sentence encoder uses the so-called untied relative positional embeddings, which have been recently published at ICLR conference.
+Deuxièmement, l’encodeur de phrase utilise les intégrations positionnelles relatives dites non liées, qui ont été récemment publiées lors de la conférence ICLR.
+
+This positional embeddings essentially disentangles positional correlations from token to token attention computation.
+Ces intégrations positionnelles démêlent essentiellement les corrélations positionnelles de calcul d’attention gage à gage.
+
+Similar to BERT, we use a masked language model pre-training objective.
+De manière similaire aux Représentations d'encodeurs bidirectionnels à partir de transformateurs, nous utilisons un objectif de préformation de modèle de langue masqué.
+
+Essentially we have to predict both the stem and the affixes that are associated with the words.
+Essentiellement, nous devons prévenir à la fois le radical et les affixes qui sont associés aux mots.
+
+During pre-training, fifteen percent of all words are considered for prediction, of which eighty percent are masked, ten percent are swapped with random words, and ten percent are left unchanged.
+Pendant la préformation, quinze pour cent de tous les mots sont considérés pour la prévention, dont quatre-vingt pour cent sont masqués, dix pour cent sont échangés avec des mots aléatoires et dix pour cent sont laissés inchangés.
+
+For affix prediction, we face some multi label classification problem.
+Pour la prévention d’affixe, nous faisons face à un problème de classification multi-étiquettes.
+
+For this, we either group together affixes into a fixed number of sets and predict the set as a class label.
+Pour cela, nous regroupons les affixes ensemble dans un nombre fixe d’ensembles et prévenons l’ensemble comme une étiquette de classe.
+
+The other option is to predict the affix probability vector.
+Ou bien, l’autre option est de prévenir le vecteur de probabilité d’affixe.
+
+We evaluate both of these approaches in our experiments.
+Nous évaluons ces deux approches dans nos expériences.
+
+We pre-train KinyaBERT on about two and half gigabytes of Kinyarwanda text, and compare it to three baseline models.
+Nous préformons KinyaBERT sur environ deux giga-octets et demi de texte kinyarwanda, et le comparons à trois modèles de base.
+
+One is a multilingual model called XLM-R, that is trained on a large text corpora that is made of multiple languages.
+L’un est un modèle multilingue appelé XLM-R, qui est formé sur un grand corpus de texte composé de plusieurs langues.
+
+The other two baselines are pretrained on the same Kinyarwanda text using either the byte pair encoding algorithm or using morphological analysis without using the two tier transformer encoder architecture.
+Les deux autres bases sont préformées sur le même texte kinyarwanda en utilisant soit l’algorithme de byte pair encoding, soit l’analyse morphologique sans utiliser l’architecture encodeur de conversion à deux niveaux.
+
+All models are configured in the base architecture, which is about between a hundred and a hundred and ten million parameters, with Kinyarwanda with KinyaBERT using the least number of parameters.
+Tous les modèles sont configurés dans l’architecture de base, qui est d’environ cent à cent et dix millions de paramètres, avec le kinyarwanda avec KinyaBERT utilisant le plus petit nombre de paramètres.
+
+All models except the multilingual are pretrained for thirty two thousand gradient updates with a batch size of two thousand five hundred and sixty sequences in each batch.
+Tous les modèles sauf les multilingues sont préformés pour trente-deux mille mises à jour de pentes avec une taille de lot de deux mille cinq cent soixante séquences dans chaque lot.
+
+We evaluate the pretrained models on three sets of tasks.
+Nous évaluons les modèles préformés sur trois ensembles de tâches.
+
+One is the GLUE benchmark which has often been used for evaluating the effectiveness of pretrained language models.
+L’une est la référence GLUE qui a souvent été utilisée pour évaluer l’efficacité des modèles de langue préformée.
+
+We obtain our GLUE benchmark data by translating the original benchmark data into Kinyarwanda using Google Translate.
+Nous obtenons nos données de référence GLUE en traduisant les données de référence originales en kinyarwanda à l’aide de Google Translate.
+
+The second task is Kinyarwanda named entity recognition benchmark, which is a high quality dataset that was annotated by trained native speakers.
+La deuxième tâche est la référence de reconnaissance d'entité nommée kinyarwanda, qui est un ensemble de données de haute qualité ayant été annoté par des locuteurs natifs formés.
+
+The third one is a news categorization task where we pull news articles from several websites and collecting their categorization tags that were assigned by the authors and then essentially trying to predict the same, the the same categories.
+La troisième est une tâche de catégorisation des actualités où nous extrayons des articles de actualités de plusieurs sites web et collectons leurs étiquettes de catégorisation qui ont été attribuées par les auteurs, puis essayons essentiellement de prévenir ces dernières, les mêmes catégories.
+
+And now we go to the results.
+Et maintenant, passons aux résultats.
+
+For the GLUE benchmark, we find that KinyaBERT consistently outperforms baseline models.
+Pour la référence GLUE, nous constatons que KinyaBERT dépasse systématiquement les modèles de référence.
+
+Here we show the average performance for ten finetuning runs.
+Ici, nous montrons la performance moyenne pour dix cycles de raffinement.
+
+We also run a user evaluation of the translations that are produced by Google Translate.
+Nous effectuons également une évaluation des traductions produites par Google Translate.
+
+Essentially, user users rated about six thousand examples, assigning scores on a scale from one to four, assessing the quality of the translations.
+Essentiellement, les utilisateurs ont évalué environ six mille exemples, en attribuant des scores sur une échelle de un à quatre et en évaluant la qualité des traductions.
+
+The result is that many translations were noisy.
+Le résultat est que beaucoup de traductions étaient bruyantes.
+
+But, all models had to cope with the same translation noise, and the relative performance between the models is still important to notice.
+Mais tous les modèles ont dû faire face au même bruit de traduction, et la performance relative entre les modèles est toujours importante à remarquer.
+
+For the named entity recognition task, we also find that KinyaBERT gives the best performance with the affix distribution regression variant performing best.
+Pour la tâche de reconnaissance d'entité nommée, nous constatons également que KinyaBERT fournit les meilleures performances avec la variante de régression de distribution d’affixes fonctionnant le mieux.
+
+These results are also averages of ten finetuning runs.
+Ces résultats sont également des moyennes de dix cycles de raffinement.
+
+For the news categorization task, we find mixed results.
+Pour la tâche de catégorisation des actualités, nous trouvons des résultats mitigés.
+
+Previous work on text classification for Kinyarwanda had found that simple keyword detection is mostly enough for solving this specific task.
+Le travail antérieur sur la classification de texte pour le kinyarwanda avait trouvé que la détection de mot-clé simple est surtout suffisante pour résoudre cette tâche spécifique.
+
+Therefore, there is less gain from using pretrained language models.
+Par conséquent, il y a moins d'avantage à utiliser des modèles de langue préformée.
+
+On this particular task of news categorization.
+Sur cette tâche particulière de catégorisation des actualités.
+
+We also conducted an ablation study to see if there are alternative structures that improve performance.
+Nous avons également mené une étude d’ablation pour voir s’il existe des structures alternatives qui améliorent les performances.
+
+For the GLUE benchmark, we find that using affix sets consistently performs better, while affix probability regression objective yields the best performance on named entity recognition.
+Pour la référence GLUE, nous constatons que l’utilisation d’ensembles d’affixes donne constamment de meilleurs résultats, tandis que l’objectif de régression de probabilité d’affixe fournit les meilleures performances sur la reconnaissance d'entité nommée.
+
+Also by looking at the low scores for finetuning, we find that KinyaBERT has better convergence in most cases.
+De plus, en examinant les faibles scores pour le raffinement, nous constatons que KinyaBERT a une meilleure convergence dans la plupart des cas.
+
+So to conclude, this work has demonstrated the effectiveness of explicitly using morphological information in pretrained language models.
+Donc, pour conclure, ce travail a démontré l’efficacité de l’utilisation explicite des informations morphologiques dans les modèles de langue préformée.
+
+The proposed two tier transformer encoder architecture enables capturing morphological complexity morphological compositionality, which is an important aspect of morphologically rich languages.
+L’architecture à deux niveaux proposée permet de capturer la compositionnalité morphologique de la complexité morphologique, qui est un aspect important des langues morphologiquement riches.
+
+These findings should motivate further research into morphology aware language pretrained language models.
+Ces résultats devraient motiver davantage les recherches sur les modèles de langue préformée conscients de la morphologie.
+
+Hello, my name is Michał Pietruszka and it is my pleasure to present to you the paper titled Sparsifying Transformer Models with Trainable Representation Pooling.
+Bonjour, je m’appelle Michal Pietruszka et j’ai le plaisir de vous présenter l’article intitulé Modèles de conversion parcimonieux avec la mise en commun de la représentation adaptative.
+
+A work done at Applica AI in cooperation with Lukasz Borchmann and Lukasz Garncarek.
+Un travail réalisé à Applica intelligence artificielle en coopération avec Lukasz Borchmann et Lukasz Garncarek.
+
+Let me start with the problems our work targets.
+Permettez-moi de commencer par les problèmes que nous visons dans le cadre de notre travail.
+
+Our method works well for the cases where long inputs are considered.
+Notre méthode fonctionne bien pour les cas où de longues saisies sont considérées.
+
+Roughly speaking, it is meant for the task orders and input of over two thousand tokens and the targets are shorter than the provided inputs.
+En gros, c’est pour les ordres de tâche et de saisie de plus de deux mille gages, et les cibles sont plus courtes que les saisies fournies.
+
+This has some specific applications in NLP.
+Cela a des applications spécifiques en TAL traitement automatique du langage naturel.
+
+For example, one can imagine that given a long document, there's a need to summarize it, classify, answer the question about it, extract information or some key phrases.
+Par exemple, on peut imaginer qu’étant donné qu’un document est long, il est nécessaire de le résumer, de classer, de répondre à la question à ce sujet et d’extraire des informations ou certaines expressions clés.
+
+Let me recall the vanilla transformer and our and its issue of its attention complexity that depends on the square of the input line.
+Permettez-moi de rappeler la conversion vanille et sa question de sa complexité d’attention qui dépend du carré de la ligne de saisie.
+
+In the vanilla transformer, with full attention connectivity, relations of each token to every other token have to be calculated.
+Dans la conversion vanille, avec une connectivité de pleine attention, les relations de chaque gage à chaque autre gage doivent être calculées.
+
+The computational complexity of attention, this depends on the number of layers l, sequence length n, another sequence length, and the dimensionality of representations.
+La complexité informatique de l’attention, qui dépend du nombre de couches l, de la longueur de séquence n, d’une autre longueur de séquence et de la dimensionnalité des représentations.
+
+Similarly, in the decoder's cross attention, to this picture on the right side, the only difference here is that the target tokens are attending to the input tokens in this case.
+De même, dans l’attention croisée du décodeur, à cette image sur le côté droit, la seule différence ici est que les gages cibles sont attentifs aux gages de saisie dans ce cas.
+
+Which can be seen also in this formula.
+Ce que l’on retrouve également dans cette formule.
+
+The BLEU score represents relations that have to be calculated.
+Le score BLEU représente les relations qui doivent être calculées.
+
+In case of the full attention, we need to calculate every relations within the input sequence.
+Dans le cas de la pleine attention, nous devons calculer toutes les relations dans la séquence de saisie.
+
+Now, we see what happens when we have a blockwise encoder that works by limiting the tokens connectivity so that they can only see other nearby tokens.
+Maintenant, nous voyons ce qui se passe lorsque nous avons un encodeur par bloc qui fonctionne en limitant la connectivité des gages afin qu’ils ne puissent voir que les autres gages à proximité.
+
+The text is read in chunks which can drastically reduce the number of computations on the encoder side, but does not improve the decoder's cross attention as every input token is passed to the decoder anyway.
+Le texte est lu en morceaux, ce qui peut réduire considérablement le nombre de calculs du côté de l’encodeur, mais n’améliore pas l’attention croisée du décodeur car chaque gage de saisie est de toute façon transmis au décodeur.
+
+This method is often referred to as fusion in decoder.
+Cette méthode est souvent appelée fusion dans le décodeur.
+
+The improvement here can be interpreted as changing one of the dependencies of n to another constant m representing the block size.
+L’amélioration ici peut être interprétée comme changeant l’une des dépendances de n en une autre constante m représentant la taille du bloc.
+
+Our key observation is that most tokens are irrelevant for a wide variety of tasks and can be almost completely disregarded.
+Notre observation clé est que la plupart des gages ne sont pas pertinents pour une grande variété de tâches et peuvent être presque complètement ignorés.
+
+This is exemplified on the slide.
+Ceci est illustré sur la diapositive.
+
+The only parts of the inputs are relevant to the desired output.
+Les seules parties des saisies sont pertinentes pour la sortie souhaitée.
+
+For example.
+Par exemple.
+
+One can read an article once marking the most important parts with a highlighter, and then produce a summary based on this part from the middle stage only.
+On peut lire un article une fois en marquant les parties les plus importantes avec un surligneur, puis produire un résumé basé sur cette partie à partir du stade intermédiaire seulement.
+
+The cost of highlighting and deciding if the current token is essential to produce the summary is thus cheap and depends only on the token's representation.
+Le coût de la mise en surbrillance et de la décision de savoir si le gage actuel est essentiel pour produire le résumé est donc peu élevé et ne dépend que de la représentation du gage.
+
+The pooling of the highlighted tokens is possible.
+La mise en commun des gages en surbrillance est possible.
+
+Thanks to our top k operator and its cost is negligible.
+Grâce à notre meilleur opérateur k, son coût est négligeable.
+
+The cost of producing a summary from a shortened input is also much lower than in the vanilla model when the whole input is considered.
+Le coût de production d’un résumé à partir d’une saisie raccourcie est également beaucoup plus faible que dans le modèle vanille lorsque la saisie complète est prise en compte.
+
+But here's a question.
+Mais une question se pose.
+
+How to select important tokens and backpropagate gradients to that selection?
+Comment sélectionner les gages importants et rétropropager les pentes vers cette sélection ?
+
+The essential underlying problem that we solve is to propose the trainable selection mechanism.
+Le problème sous-jacent essentiel que nous résolvons est de proposer le mécanisme de sélection adaptatif.
+
+One that can allow for gradient to be back propagated during the training so that the network can learn to select the most important tokens.
+Celui qui peut permettre à la pente de se rétropropager pendant la formation afin que le réseau puisse apprendre à sélectionner les gages les plus importants.
+
+More precisely Given some embeddings underscore obtained from a simple linear layer, the task is to return the highest scoring embeddings.
+Plus précisément Compte tenu de certains soulignements d’intégrations obtenus à partir d’une couche linéaire simple, la tâche est de renvoyer les intégrations au score le plus élevé.
+
+First, the sequence is permuted and pairs are prepared so that the higher scoring vector is taken with the lower scoring one.
+Tout d’abord, la séquence est permutée et les paires sont préparées de manière à ce que le vecteur de score le plus élevé soit pris avec le vecteur de score le plus faible.
+
+Next, weights are calculated using boosted softmax over scores.
+Ensuite, les poids sont calculés à l’aide de softmax boosté sur les scores.
+
+After each tournament round, new vectors and scores are composed as a linear combination of those pairs with the obtained weights.
+Après chaque tour de tournoi, de nouveaux vecteurs et scores sont composés comme une combinaison linéaire de ces paires avec les poids obtenus.
+
+So in short, we combine them linearly by performing a softmax over their scores.
+Donc, en bref, nous les combinons linéairement en effectuant un softmax sur leurs scores.
+
+And while combining two tokens, some noise can be produces produced.
+Et tout en combinant deux gages, un certain bruit peut être produit.
+
+But it also allows the gradients to be propagated to all input embeddings.
+Mais cela permet aussi de propager les pentes à toutes les intégrations de saisie.
+
+In short, a trainable top k we propose is based on performing a tournament like soft selection at each step.
+En bref, un top k adaptatif que nous proposons est basé sur l’exécution d’un tournoi comme la sélection souple à chaque étape.
+
+And from a different perspective, the representation pooling follows the encoder layer.
+Et d’un point de vue différent, la mise en commun de la représentation suit la couche de l’encodeur.
+
+First, each representation is scored and then only those with the highest scores are passed to the next layer.
+Tout d’abord, chaque représentation est notée, puis seules celles qui ont les scores les plus élevés sont passées à la couche suivante.
+
+Encoding can be performed as in standard transformer architecture on the full length input.
+L’encodage peut être effectué comme dans l’architecture de conversion standard sur la saisie pleine longueur.
+
+It is however possible to process text in blocks of fixed length of fixed length and globally select the best representation.
+Il est cependant possible de traiter le texte par blocs de longueur fixe et de sélectionner globalement la meilleure représentation.
+
+Here is an example of the representation pooling introduced after the encoder.
+Voici un exemple de la mise en commun de représentation introduite après l’encodeur.
+
+This directly influenced the cause of cross attention, which depends not on the input length N, but the constant K, representing the pooled length.
+Cela a directement influencé la cause de l’attention croisée, qui ne dépend pas de la longueur de saisie N, mais de la constante K, représentant la longueur mise en commun.
+
+This constant informs how many representations are selected and passed to the decoder.
+Cette constante indique combien de représentations sont sélectionnées et transmises au décodeur.
+
+Producing a summary from a shorter text is significantly cheaper than previous solution.
+Produire un résumé à partir d’un texte plus court est nettement moins cher que la solution antérieure.
+
+As the sequence length can be shortened by a large factor.
+Comme la longueur de séquence qui peut être raccourcie par un grand facteur.
+
+For example, we successfully used k of sixteen or even sixty times four or even sixty four times smaller than the value of n in our experiments.
+Par exemple, nous avons utilisé avec succès le k seize ou même soixante-quatre fois plus petit que la valeur de n dans nos expériences.
+
+Please note that the beneficial impact of blockwise encoding and self attention is sustained.
+Veuillez noter que l’impact bénéfique de l’encodage par blocs et de l’attention personnelle est maintenu.
+
+Remember that the computational cost of attention depend on the square of the input length.
+Rappelez-vous que le coût informatique de l’attention dépend du carré de la longueur de saisie.
+
+Reducing it the input earlier during the encoding process can significantly lower the costs.
+Réduire plus tôt la saisie pendant le processus d’encodage peut baisser considérablement les coûts.
+
+For the pyramidion model, we narrowed down the size of the representation on the output of each of each chosen layer, leading to the exponential reduction of computational cost as the encoding proceeds.
+Pour le modèle pyramidion, nous avons réduit la taille de la représentation sur la sortie de chaque couche choisie, conduisant à la réduction exponentielle du coût informatique au fur et à mesure que l’encodage progresse.
+
+As you can see, the total computational cost of a full encoder here is less than two times the cost of the full-sized first layer.
+Comme vous pouvez le voir, le coût informatique total d’un encodeur complet est ici moins de deux fois le coût de la première couche pleine grandeur.
+
+When pooling is introduced earlier, the sum of all purple squares is thus bounded to a constant, not dependent on the number of layers l. But on the constant c, which can be influenced by the placing of the pooling layers within the network.
+Lorsque la mise en commun est introduite plus tôt, la somme de tous les carrés violets est donc liée à une constante, qui ne dépend pas du nombre de couches l. Mais sur la constante c, qui peut être influencée par le placement des couches de mise en commun au sein du réseau.
+
+Our improvements were benchmarked on eight thousand tokens long inputs.
+Nos améliorations ont été évaluées sur la base de huit mille longues saisies de gages.
+
+And the figure shows that when pooling is engaged, the best scalability for the network's depth is achieved.
+Et la figure montre que lorsque la mise en commun est engagée, la meilleure évolutivité pour la profondeur du réseau est atteinte.
+
+Here one can note that training the pyramidion of twenty four layers can be cheaper than training a two layer vanilla transformer on such long inputs.
+Ici, on peut noter que la formation du pyramidion de vingt-quatre couches peut être moins chère que la formation d’une conversion vanille à deux couches sur des saisies aussi longues.
+
+Not to mention how easily vanilla transformer can go out of memory for such a long input.
+Sans parler de la facilité avec laquelle la conversion vanille peut perdre la mémoire pour une si longue saisie.
+
+The qual quality qual qualitative comparison of our trend pyramidion to other baseline is performed on the long document summarization task, or given the body of an article from arXiv or PubMed, the task is to generate its abstract.
+La comparaison qual qualité qual qualitative de notre pyramidion tendance à d’autres bases est effectuée sur la longue tâche de synthèse de document, ou compte tenu du corps d’un article d’arXiv ou PubMed, la tâche est de générer son résumé.
+
+Thus, one can see blockwise, which is our baseline, performs on the level of the re, recent state-of-the-art models, while the pyramidion retains or improves the performance of this competitive baseline.
+Ainsi, on peut voir bloc par bloc, qui est notre base, ce qui est effectué au niveau du re, les modèles ultra-modernes récents, tandis que le pyramidion conserve ou améliore la performance de cette base compétitive.
+
+At the same time, our model is eighty percent faster to train and over four hundred fifty percent faster at inference when compared to the blockwise baseline.
+En même temps, notre modèle est quatre-vingts pour cent plus rapide à former et plus de quatre cent cinquante pour cent plus rapide à l’inférence quand il est comparé à la base par bloc.
+
+Both models have much lower parameter counts and were trained from scratch on the chosen tasks.
+Les deux modèles ont un nombre de paramètres beaucoup plus faible et ont été formés à partir de zéro sur les tâches choisies.
+
+Previous approaches to to achieve a similar performance had to use more parameters and leverage pretrained foundation foundational models and additional language pretraining objective to achieve similar performance.
+Les approches antérieures visant à atteindre un rendement similaire devaient utiliser plus de paramètres et tirer parti des modèles fondamentaux de base préformés, ainsi que de l’objectif de préformation en langue supplémentaire pour atteindre un rendement similaire.
+
+We invite you to read our full paper and use our GitHub code.
+Nous vous invitons à lire notre article complet et à utiliser notre code GitHub.
+
+Thank you for watching.
+Merci d’avoir regardé cette vidéo.
+
+Hello, this is Jiawei Zhou from Harvard University.
+Bonjour, je m’appelle Jiawei Zhou de l’Université d’Harvard.
+
+I am very glad to present our work on Online Semantic Parsing for Latency Reduction in Task-Oriented Dialogue.
+Je suis très heureux de présenter notre travail sur l’analyse syntaxique et sémantique en ligne pour la réduction de la latence dans le dialogue orienté sur la tâche.
+
+This is joint work with Jason, Michael, Anthony and Sam from Microsoft Semantic Machines.
+Il s’agit d’un travail commun avec Jason, Michael, Anthony et Sam de Semantic Machines par Microsoft.
+
+In task-oriented dialogue, a user interacts with the system that handles requests from user utterances usually in speaking.
+Dans le dialogue orienté sur la tâche, un utilisateur interagit avec le système qui traite les discours de l’utilisateur énoncés généralement en parlant.
+
+From the finish of the user utterance to the system response there is often a noticeable delay.
+De la fin du discours de l’utilisateur à la réponse du système, il y a souvent un retard notable.
+
+Under the hood, the user utterance is translated into an executable program.
+Sous le capot, le discours de l’utilisateur est traduit en un programme exécutable.
+
+Which is then executed so that the system can respond properly.
+Celui-ci est ensuite exécuté afin que le système puisse répondre correctement.
+
+Because the program is represented as a semantic graph that outlines the computation, where node represents a function invocation and its children are the arguments.
+Parce que le programme est représenté comme un graphique sémantique qui décrit le calcul, où le nodule représente une invocation de fonction et ses enfants sont les arguments.
+
+The great nodes mark instantaneous operations, but the others are slow to execute.
+Les grands nodules marquent des opérations instantanées, mais les autres mettent du temps à s’exécuter.
+
+The simple example here we show, these programs can often be more complicated graphs beyond the tree structures.
+Dans l’exemple simple que nous montrons ici, ces programmes peuvent souvent être des graphiques plus compliqués au-delà des structures arborescentes.
+
+In this talk, we ask the question, can we start generating the program and executing it before the user even finishes the utterance so that the faster response can be achieved by the system?
+Dans cette conférence, nous posons la question : pouvons-nous commencer à générer le programme et à l’exécuter avant même que l’utilisateur ait terminé le discours, afin que le système puisse obtenir une réponse plus rapide ?
+
+This is the online prediction and decision problem.
+C’est la prévention en ligne et le problème de décision.
+
+There are a lot of others in this realm.
+Il y en a beaucoup d’autres dans ce domaine.
+
+Examples include simultaneous translation where a live interpreter translates one language to another in real time, smart text auto completion to guess the user intent, and Uber pool where the drivers are sent to where they might be needed based on the predicted demand.
+Les exemples incluent la traduction simultanée où un interprète en direct traduit une langue en une autre en temps réel, la saisie automatique intelligente du texte pour deviner l’intention de l’utilisateur, et Uber pool où les chauffeurs sont envoyés là où ils pourraient être nécessaires en fonction de la demande prévue.
+
+All of these scenarios have one thing in common.
+Tous ces scénarios ont une chose en commun.
+
+That is, it is beneficial to make decisions before seeing all the input.
+C’est-à-dire qu’il est bénéfique de prendre des décisions avant de voir toutes les saisies.
+
+In our case, we are going to deal with online semantic parsing, which could be expected to be challenging as we have to guess what the user might say.
+Dans notre cas, nous allons traiter de l’analyse syntaxique et sémantique en ligne, ce qui pourrait être difficile car nous devons deviner ce que l’utilisateur pourrait dire.
+
+And it is also underexplored with no formal evaluation metric.
+Et cela est également sous-exploré sans indicateur d’évaluation formel.
+
+First, let's look at how an ordinary system works.
+Tout d’abord, regardons comment fonctionne un système ordinaire.
+
+It is operating offline by parsing to the program only at the end of the user utterance.
+Il fonctionne hors ligne par l'analyse syntaxique du programme uniquement à la fin du discours de l’utilisateur.
+
+Here, the character graph is predicted after seeing all the information.
+Ici, le graphique de caractères est prévenu après avoir vu toutes les informations.
+
+In contrast, we are proposing an online system that compares at every utterance prefix.
+En revanche, nous proposons un système en ligne qui compare à chaque préfixe de discours.
+
+For example, each time we see a new token, we predict a new graph.
+Par exemple, chaque fois que nous voyons un nouveau gage, nous prévenons un nouveau graphique.
+
+Notice that there could be errors.
+Notez qu’il peut y avoir des erreurs.
+
+At the position of at the pool party with Barack Obama, we got a graph with the right nodes on the person and the event subject, but guess the wrong timing information.
+À l’emplacement de la pool party avec Barack Obama, nous avons obtenu un graphique avec les bons nodules sur la personne et le sujet d’activité, mais deviné les mauvaises informations de timing.
+
+This process goes on until we receive the full user utterance.
+Ce processus se poursuit jusqu’à ce que nous recevions le discours complet de l’utilisateur.
+
+How would this affect the execution timeline in the offline system?
+Comment cela affecterait-il la chronologie d’exécution dans le système hors ligne ?
+
+We'll get the program graph at the end so that the system can start execution at this point.
+Nous obtiendrons le graphique de programme à la fin afin que le système puisse commencer l’exécution à ce stade.
+
+Remember that the great nodes are fast operations, so we only consider the execution timeline of the colored slow functions.
+Rappelez-vous que les grands nodules sont des opérations rapides ; nous ne considérons donc que la chronologie d’exécution des fonctions lentes colorées.
+
+First, these two find person functions can be executed in parallel, highlighted in white from the pink box as they have no dependency on other functions.
+Premièrement, ces deux fonctions Trouver une personne peuvent être exécutées en parallèle, surlignées en blanc à partir de la case rose car elles n’ont pas de dépendance à d’autres fonctions.
+
+Next, the node create event can then get executed after obtaining results from lower level nodes and then the top function yield so the whole program is finished.
+Ensuite, l’activité de création de nodules peut ensuite être exécutée après avoir obtenu des résultats à partir de nodules de niveau inférieur, puis la fonction supérieure mène à l’achèvement de l’ensemble du programme.
+
+The execution process is strict, restricted to the program dependency structure where some operations cannot be parallelized which induces a noticeable delay.
+Le processus d’exécution est strict, limité à la structure de dépendance du programme où certaines opérations ne peuvent pas être parallélisées, ce qui induit un retard notable.
+
+In our online system, where we predict as we go, the program execution can start earlier.
+Dans notre système en ligne, où nous prévenons au fur et à mesure, l’exécution du programme peut commencer plus tôt.
+
+Here, at the prefix after Obama we predict confidently that the find person function should be in the program, but the rest may contain errors as they are grayed out.
+Ici, au préfixe après Obama, nous prévenons en toute confiance que la fonction Trouver une personne devrait être dans le programme, mais le reste peut contenir des erreurs car elles sont grisées.
+
+The execution of the node can be immediately started as a step.
+L’exécution du nodule peut être immédiatement commencée comme une étape.
+
+Then, with more tokens, we predict a totally new graph, but part of it has already being executed.
+Ensuite, avec plus de gages, nous prévenons un graphique totalement nouveau, mais une partie est déjà en cours d’exécution.
+
+So, we only need to consider the rest of the nodes that we are confident about as well.
+Donc, nous n’avons qu’à considérer le reste des nodules sur lesquels nous sommes confiants.
+
+Here, another find person can be executed in parallel.
+Ici, une autre fonction Trouver une personne peut être exécutée en parallèle.
+
+Again, we may have wrong predictions.
+Encore une fois, nous pouvons avoir des préventions erronées.
+
+With more text, we have more ability to make it right.
+Avec plus de texte, nous avons plus de capacité à faire les choses correctement.
+
+Such as the event time here where AM is also anticipated correctly.
+Comme l’heure de l’activité ici où AM est également anticipé correctement.
+
+Then, we can start executing the rest following the program dependency structure.
+Ensuite, nous pouvons commencer à exécuter le reste en suivant la structure de dépendance du programme.
+
+By overlapping the execution timeline with the utterance timeline, we save a big amount of time.
+En chevauchant la chronologie d’exécution avec la chronologie du discours, nous gagnons beaucoup de temps.
+
+So we proposed the task of online semantic parsing.
+Nous avons donc proposé la tâche d’analyse syntaxique et sémantique en ligne.
+
+One underlying assumption is that the execution time dominates the model prediction time.
+Une hypothèse sous-jacente est que le temps d’exécution domine le temps de prévention du modèle.
+
+So we could only gain time by predicting earlier.
+Donc, nous ne pouvions gagner du temps qu’en prévenant plus tôt.
+
+Another assumption is that as the prediction and execution happen in the background, that it is not visible to users.
+Une autre hypothèse est que, comme la prévention et l’exécution se produisent en arrière-plan, cela n’est pas visible par les utilisateurs.
+
+It is not necessary to maintain a consistent parsing history.
+Il n’est pas nécessaire de maintenir un historique d’analyse syntaxique cohérent.
+
+So, we reparse from scratch after each token.
+Donc, nous réanalysons à partir de zéro après chaque gage.
+
+In particular, we propose a two step approach.
+En particulier, nous proposons une approche en deux étapes.
+
+A proposed step that predicts a graph with complete structure and a select step that selects the nodes that are worth executing at this time.
+Une étape proposée qui prévient un graphique avec une structure complète et une étape de sélection qui sélectionne les nodules valant la peine d’être exécutés pour le moment.
+
+We had two variants of the proposed method.
+Nous avions deux variantes de la méthode proposée.
+
+First approach combines a language model completion with full utterance to graph parsing.
+La première approche combine l’achèvement d’un modèle de langue avec un discours complet à analyse syntaxique de graphique.
+
+In particular, the prefix after Obama is first completed through a finetuned BART language model and then translated into a program with full offline parser.
+En particulier, le préfixe après Obama est d’abord complété par un modèle de langue BART raffiné, puis traduit en un programme avec un analyseur hors ligne complet.
+
+The second approach directly predicts the program from user utterance prefixes.
+La seconde approche prévient directement le programme à partir des préfixes de discours de l’utilisateur.
+
+This is achieved by training a single online parser to translate to the goal graph from each prefix.
+Ceci est réalisé en formant un seul analyseur en ligne à traduire au graphique objectif à partir de chaque préfixe.
+
+This facilitates the model to learn the right anticipation.
+Cela facilite au modèle l’apprentissage de la bonne anticipation.
+
+In a bit more detail, how do we generate these graphs?
+Avec un peu plus de détails, comment générons-nous ces graphiques ?
+
+We formulate the problem by generating a serial version of the graph.
+Nous formulons le problème en générant une version série du graphique.
+
+Each node or edge is represented by an action.
+Chaque nodule ou arête est représenté(e) par une action.
+
+Here, we start from the first node.
+Ici, nous commençons par le premier nodule.
+
+The number below records the absolute index in action history.
+Le nombre ci-dessous enregistre l’indice absolu dans l’historique des actions.
+
+Then, we got the second node.
+Ensuite, nous avons le deuxième nodule.
+
+Next, is the edge between them.
+Ensuite, il y a l’arête entre eux.
+
+It contains the pointer to the index of the previous node and the edge label.
+Il contient le pointeur vers l’indice du nodule antérieur et l’étiquette d’arête.
+
+Zero here means connecting the most recent node with the node generated by the zeroth action and next node next edge.
+Zéro signifie ici connecter le nodule le plus récent avec le nodule généré par l’action zéro, le nodule suivant et l’arête suivante.
+
+This process goes on until we generate the full graph.
+Ce processus se poursuit jusqu’à ce que nous générions le graphique complet.
+
+The underlying model is based on transformer with self pointing mechanism similar to a previous transition based parser.
+Le modèle sous-jacent est basé sur un transformateur avec un mécanisme de pointage automatique similaire à un analyseur basé sur la transition antérieure.
+
+After generating a complete graph, we obtained the action level probabilities that correspond to different parts of the graph.
+Après avoir généré un graphique complet, nous avons obtenu les probabilités de niveau d’action qui correspondent aux différentes parties du graphique.
+
+We select confidence subgraphs based on the thresholding heuristic to be executed.
+Nous sélectionnons des sous-graphiques de confiance en fonction de l’heuristique de seuillage à exécuter.
+
+Later on, we're going to vary the threshold to achieve different tradeoffs between the latency reduction and the execution cost.
+Plus tard, nous allons modifier le seuil pour obtenir différents compromis entre la réduction de la latence et le coût d’exécution.
+
+For formal evaluation of the online methods, we propose final latency reduction or FLR metric.
+Pour une évaluation formelle des méthodes en ligne, nous proposons une réduction finale de la latence ou un indicateur FLR.
+
+Here's a recap of how an offline system finishes the execution timeline.
+Voici un récapitulatif de la façon dont un système hors ligne termine la chronologie d’exécution.
+
+In online systems, execution overlaps with the utterance timeline, so it ends earlier.
+Dans les systèmes en ligne, l’exécution chevauche la chronologie de discours ; donc elle se termine plus tôt.
+
+FLR is defined as the reduction time compared to the offline system, marked by the end of the execution.
+FLR est défini comme le temps de réduction comparé au système hors ligne, marqué par la fin de l’exécution.
+
+We conduct experiments on two large conversational semantic parsing datasets, SMCalFlow and TreeDST.
+Nous menons des expériences sur deux grandes données d’analyse syntaxique et sémantique conversationnelle, SMCalFlow et TreeDST.
+
+Our graph based parser when operating offline, achieves state-of-the-art performance on parsing on both datasets.
+Notre analyseur basé sur le graphique, lorsqu’il fonctionne hors ligne, atteint des performances de pointe sur l’analyse syntaxique sur les deux données.
+
+The LM complete model also achieves nontrivial BLEU gain compared with the simple baseline of node completion.
+Le modèle complet de LM réalise également un gain BLEU non trivial comparé à la simple base de l’achèvement du nodule.
+
+Now, let's look at the prediction accuracy of our prefix to graph parser.
+Examinons maintenant la précision de prévention de notre préfixe pour l’analyseur de graphique.
+
+We test the match F1 score of graph tuples between the generation and the go graph in validation data in y axis for each prefix length in x axis represented by percentages.
+Nous testons le score F1 de correspondance des tuples de graphique entre la génération et le graphique dans les données de validation dans l’axe y pour chaque longueur de préfixe, et dans l’axe x représenté par des pourcentages.
+
+Each of these curves represents a different model with the only difference in training data.
+Chacune de ces courbes représente un modèle différent avec la seule différence de données de formation.
+
+The bottom curve is the offline parser, and we mix in prefix data in different lengths to transition the model to an online parser.
+La courbe du bas est l’analyseur hors ligne, et nous mélangeons les données de préfixe en différentes longueurs pour faire passer le modèle à un analyseur en ligne.
+
+For example, the legend prefix eighty percent plus means the model is trained with prefix data with prefix length larger than eighty percent of the full utterance length.
+Par exemple, le préfixe de légende quatre-vingts pour cent plus signifie que le modèle est formé avec les données de préfixe ayant une longueur de préfixe supérieure à quatre-vingts pour cent de la longueur totale du discours.
+
+The upper left corner is the desired area.
+Le coin supérieur gauche est la zone souhaitée.
+
+As we can see, the offline parser in black curve is not doing well on the prefix data.
+Comme nous pouvons le voir, l’analyseur hors ligne en courbe noire ne se porte pas bien sur les données de préfixe.
+
+As we're mixing more prefixes in training, the curve is lifting upper and left, performing better on all the prefix lengths.
+Comme nous mélangeons plus de préfixes dans la formation, la courbe se soulève en haut à gauche, en étant plus performante sur toutes les longueurs de préfixe.
+
+However, the full utterance parsing performance is not affected in the upper right dot.
+Cependant, la performance complète d’analyse syntaxique du discours n’est pas affectée dans le point supérieur droit.
+
+Based on these strong results, how much latency do we reduce?
+Sur la base de ces résultats solides, combien de latence réduisons-nous ?
+
+We measure the time by the number of source tokens and simulate different function execution times.
+Nous mesurons le temps par le nombre de gages sources et simulons différents temps d’exécution de fonction.
+
+The curves show the tradeoff between the FLR metric and the execution cost, measured by the number of excessive function costs that are not correct.
+Les courbes montrent le compromis entre l’indicateur FLR et le coût d’exécution, mesuré par le nombre de coûts de fonction excessifs qui ne sont pas corrects.
+
+This is achieved by varying the subgraph selection threshold.
+Ceci est réalisé en faisant varier le seuil de sélection du sous-graphique.
+
+A higher threshold selects fewer functions of mistake, but obtains a smaller FLR, whereas the lower threshold more aggressively selects and executes programs.
+Un seuil plus élevé sélectionne moins de fonctions d’erreur, mais obtient un FLR plus petit, tandis que le seuil inférieur sélectionne et exécute les programmes de manière plus agressive.
+
+We compare the two approaches we propose and a baseline that does nothing but directly applying the offline parser for online use.
+Nous comparons les deux approches que nous proposons et une base qui ne fait rien d’autre que d’appliquer directement l’analyseur hors ligne pour l’utilisation en ligne.
+
+The upper left region is has the best FLR and cost tradeoff.
+La région supérieure gauche a le meilleur compromis FLR et coût.
+
+We see both of our methods beat the baseline by a large margin, and they perform more similarly on TreeDST.
+Nous voyons nos deux méthodes battre la ligne de base par une grande marge, et elles fonctionnent de manière plus similaire sur TreeDST.
+
+While individual function execution is faster, there tends to be more run executions and lower latency reduction room.
+Bien que l’exécution des fonctions individuelles soit plus rapide, cela tend à y avoir plus d’exécutions lancées et une marge de réduction de la latence plus faible.
+
+When individual function execution is slower, there is more room for FLR improvement.
+Lorsque l’exécution des fonctions individuelles est plus lente, il y a plus de marge pour l’amélioration du FLR.
+
+Our two approaches achieve better performance in different cost cost regions.
+Nos deux approches permettent d’obtenir de meilleurs résultats dans différentes régions de coûts.
+
+Overall, we achieve thirty to sixty three percent relative latency reduction depending on execution time and allowed cost.
+Dans l’ensemble, nous obtenons une réduction de latence relative de trente à soixante-trois pour cent en fonction du temps d’exécution et du coût autorisé.
+
+Finally, we have a breakdown of average latency reduction in tokens for each type of the function node when the allowed cost is three run executions.
+Enfin, nous avons une répartition de la réduction de latence moyenne en gages pour chaque type de nodule de fonction lorsque le coût autorisé est de trois exécutions.
+
+As we can see, there are gains all over the board.
+Comme nous pouvons le voir, il y a des gains partout.
+
+There are also some functions on which we gain impressive latency reduction where the red bar is much longer, such as find manager and recipient.
+Il y a aussi certaines fonctions sur lesquelles nous obtenons une réduction de latence impressionnante où la barre rouge est beaucoup plus longue, comme trouver le gestionnaire et le destinataire.
+
+These are low level functions that do not have much dependency on others.
+Ce sont des fonctions de bas niveau qui n’ont pas beaucoup de dépendance des autres.
+
+In conclusion, we proposed online semantic parsing as new task to explore with the rigorous latency reduction metric.
+En conclusion, nous avons proposé une analyse syntaxique et sémantique en ligne comme nouvelle tâche à explorer avec l’indicateur rigoureux de réduction de la latence.
+
+With a strong graph based semantic parser, we achieve relatively good latency reduction either through our pipeline approach with LM completion and a full parser or directly through a learned parser on the prefixes.
+Avec un analyseur sémantique basé sur le graphique fort, nous obtenons une réduction de latence relativement bonne soit par notre approche pipeline avec l’achèvement du LM et un analyseur complet, soit directement par un analyseur appris sur les préfixes.
+
+Moreover, our approach can be a general framework and can be applied to other executable semantic representations in different domains.
+De plus, notre approche peut être un cadre général et être appliquée à d’autres représentations sémantiques exécutables dans différents domaines.
+
+Future works could explore smarter prediction and execution integration method.
+Les travaux futurs pourraient explorer la méthode d’intégration de prévention et d’exécution plus intelligente.
+
+Thanks for your listening.
+Merci de votre attention.
+
+Hi.
+Bonjour.
+
+I'm going to discuss our work on generating retrieval augmented counterfactuals for question answering tasks.
+Je vais discuter de notre travail sur la génération de contrefactuels améliorés d’extraction pour les tâches de réponse aux questions.
+
+This is work done during my internship at Google Research, where I was mentored by Matthew Lamm and Ian Tenney.
+C’est le travail effectué lors de mon stage chez le centre de recherches Google, où j’ai été encadré par Matthew Lamm et Ian Tenney.
+
+To motivate the task, let me begin by defining a counterfactual.
+Pour motiver la tâche, permettez-moi de commencer par définir un contrefactuel.
+
+In this work, we define a counterfactual as a perturbation of the input text that differs in some meaningful controlled way from the original text.
+Dans ce travail, nous définissons un contrefactuel comme une perturbation du texte de saisie qui diffère d’une manière contrôlée significative du texte original.
+
+And allows us to reason about the changes in the outcome or the task label.
+Et cela nous permet de raisonner sur les changements dans le résultat ou l’étiquette de tâche.
+
+For instance, changing the words fascinating to captivating or expected to mind-numbing changes the sentiment for this movie review.
+Par exemple, changer les mots fascinants en captivants ou supposés abrutissants change le sentiment pour cette critique de film.
+
+Similarly, adding the qualifier women's to the question changes the answer to the question in the example below.
+De même, l’ajout du qualificatif féminin à la question modifie la réponse à la question dans l’exemple ci-dessous.
+
+Humans are typically robust to such perturbations compared to NLP models trained on the task.
+Les humains sont généralement robustes à de telles perturbations comparés aux modèles de TAL traitement automatique du langage naturel formés sur la tâche.
+
+Why is that?
+Pourquoi ça ?
+
+The dataset may be sampled with systematic biases that lead to a simple decision boundary that is violated by the counterfactual.
+Les données peuvent être échantillonnées avec des biais systématiques qui conduisent à une limite de décision simple violée par le contrefactuel.
+
+As shown in this 2D classification problem.
+Comme le montre ce problème de classification 2D.
+
+My work has found that adding counterfactual examples to the training data can make the model robust to such perturbations.
+Mon travail a révélé que l’ajout d’exemples contrefactuels aux données de formation peut rendre le modèle robuste à de telles perturbations.
+
+So, if counterfactuals are valuable, how can we generate them?
+Donc, si les contrefactuels sont précieux, comment pouvons-nous les générer ?
+
+This task is especially hard for NLP because here are three examples from three different NLP tasks.
+Cette tâche est particulièrement difficile pour le TAL traitement automatique du langage naturel car il y a ici trois exemples de trois tâches de TAL traitement automatique du langage naturel différentes.
+
+As you can see, examples that violate the decision boundary between outcomes need to be very carefully crafted by perturbing some attributes of the text that are underlined here.
+Comme vous pouvez le voir, les exemples qui violent la limite de décision entre les résultats doivent être très soigneusement élaborés en perturbant certains attributs du texte qui sont soulignés ici.
+
+This could be done by human annotation, but this is expensive and biased.
+Cela pourrait être fait par annotation civique, mais cela est coûteux et partial.
+
+Some prior work has focused on using syntax trees or semantic role labeling.
+Certains travaux antérieurs se sont concentrés sur l’utilisation d’arbres de syntaxe ou d'étiquetage de rôle sémantique.
+
+But the set of perturbations generated by these techniques are limited by the semantic framework.
+Mais l’ensemble des perturbations générées par ces techniques sont limitées par le cadre sémantique.
+
+More recent work has used masked language models to fill in masked portions of the text to change labels.
+Des travaux plus récents ont utilisé des modèles de langue masqués pour remplir des parties masquées du texte afin de changer les étiquettes.
+
+But finding what parts of the text to perturb can be challenging.
+Mais trouver quelles parties du texte perturber peut être difficile.
+
+There are more challenges to generating counterfactuals for question answering specifically.
+Il y a plus de défis à générer des contrefactuels pour la réponse aux questions spécifiquement.
+
+This task requires background knowledge.
+Cette tâche nécessite des connaissances de base.
+
+For instance, to perturb the original question is Indiana Jones Temple of Doom a prequel?
+Par exemple, pour perturber la question originale : est-ce qu'Indiana Jones et le Temple maudit est une préquelle ?
+
+We need to be aware of the other movies in the franchise to get to a question like is Indiana Jones Raiders of the Lost Ark a prequel?
+Nous devons être au courant des autres films de la franchise pour arriver à une question comme : est-ce qu’Indiana Jones et les Aventuriers de l'arche perdue est une préquelle ?
+
+Furthermore, random perturbations can lead to questions that are not answerable with the available evidence or have false premises.
+En outre, des perturbations aléatoires peuvent conduire à des questions qui ne répondent pas avec les preuves disponibles ou ont de fausses prémisses.
+
+Moreover, some question perturbations can lead to significant semantic drift from the original input.
+De plus, certaines perturbations de question peuvent conduire à une dérive sémantique significative par rapport à la saisie originale.
+
+For instance, this question is Indiana Jones practicing child slavery in Temple of Doom?
+Par exemple, est-ce qu’Indiana Jones pratique l’esclavage des enfants dans le Temple maudit ?
+
+We propose a very simple yet effective technique called retrieve generate filter or RGF, to tackle counterfactual perturbations of questions, and also aims to tackle all the other aforementioned challenges.
+Nous proposons une technique très simple mais efficace appelée Retrieve Generate Filter ou RGF, pour s’attaquer aux perturbations contrefactuelles des questions, et qui vise également à relever tous les autres défis susmentionnés.
+
+The core intuition behind RGF is that the necessary background information that is needed to generate perturbations may be present in the near misses made by a question answering model.
+L’intuition de base derrière le RGF est que les informations d’arrière-plan nécessaires pour générer des perturbations peuvent être présentes dans les quasi-accidents causés par un modèle de réponse aux questions.
+
+For instance, the state-of-the-art model REALM produces the following top k answers to the question who is the captain of the Richmond Football Club?
+Par exemple, le modèle REALM à la fine pointe de la technologie produit les premières réponses k suivantes à la question : qui est le capitaine du Richmond Football Club ?
+
+While it does recover the original reference passage and answer Trent Cotchin as the top most choice.
+Bien qu’il récupère le passage de référence original et répond Trent Cotchin en premier choix.
+
+It also retrieves additional passages and answers which can be used to guide question perturbation.
+Il extrait également des passages et des réponses supplémentaires qui peuvent être utilisés pour guider la perturbation de question.
+
+For instance, it recovers two more answers corresponding to the captains of the reserve team and the women's team of the same club, and this can lead to interesting edits.
+Par exemple, il récupère deux autres réponses correspondant aux capitaines de l’équipe de réserve et de l’équipe féminine du même club, ce qui peut conduire à des modifications intéressantes.
+
+To summarize, RGF first retrieves top k most relevant answers and contexts which don't match the reference answer in context.
+Pour résumer, le RGF extrait d’abord les premières réponses k les plus pertinentes et les contextes qui ne correspondent pas à la réponse de référence dans le contexte.
+
+Following this step, the question generation model conditions on these alternate answers to generate a question that corresponds to them.
+Suite à cette étape, le modèle de production de questions conditionne ces réponses alternatives pour générer une question qui leur correspond.
+
+And finally, we can filter the generated questions based on minimality or based on the type of semantic perturbation we are interested in introducing.
+Et enfin, nous pouvons filtrer les questions générées en fonction de la minimalité ou du type de perturbation sémantique que nous voulons introduire.
+
+Going over each step in greater detail for retrieval, we use a retrieve then read model like REALM that takes as input the original question, and a large corpus like Wikipedia.
+En passant en revue chaque étape plus en détail pour l’extraction, nous utilisons un modèle lu comme REALM qui prend comme saisie la question originale, et un grand corpus comme Wikipédia.
+
+It consists of two modules.
+Il est constitué de deux modules.
+
+The retriever module performs similarity search over a dense index of passages to retrieve the top k most relevant passages to the question.
+Le module d’extraction effectue des recherches de similarité sur un indice dense de passages pour extraire les passages k les plus pertinents à la question.
+
+And a reader module then extracts a span from each passage as a potential answer.
+Et un module de lecture extrait ensuite un étendage de chaque passage en tant que réponse potentielle.
+
+REALM retrieves the gold passage and answer in most cases.
+REALM extrait le passage d’or et la réponse dans la plupart des cas.
+
+However, in this work, we are more interested in the answers and context that it retrieves further down the line.
+Cependant, dans ce travail, nous sommes plus intéressés par les réponses et le contexte qu’il extrait plus loin dans la ligne.
+
+In the next step, question generation, we use these alternate answers and contexts to regenerate new questions that correspond to these alternatives.
+Dans l’étape suivante, production de questions, nous utilisons ces réponses alternatives et contextes pour générer de nouvelles questions qui correspondent à ces alternatives.
+
+Question generation model is a pre trained text-to-text transformer that is fine-tuned on the NQ data to generate a question for an answer that's marked in context.
+Le modèle de production de questions est une conversion texte-à-texte préformé qui est raffiné sur les données NQ pour générer une question pour une réponse marquée dans le contexte.
+
+During inference we supply the question generation model, the alternative answer and context that we retrieved in the previous step.
+Au cours de l’inférence, nous fournissons le modèle de production de questions, la réponse alternative et le contexte que nous avons extraits à l’étape antérieure.
+
+For example, for the query who is the captain of the Richmond Football Club?
+Par exemple, pour la question : qui est le capitaine du Richmond Football Club ?
+
+REALM retrieves passages about the club's women's team, captained by Jess Kennedy, and the question generation model generates the query who captained Richmond Football Club's first ever women's team?
+REALM extrait des passages sur l’équipe féminine du club, dirigée par Jess Kennedy, et le modèle de production de questions génère la requête « qui a été le capitaine de la toute première équipe féminine du Richmond Football Club ? »
+
+Which has a specific semantic perturbation.
+Qui a une perturbation sémantique spécifique.
+
+In a similar fashion, we also get queries like who captained Richmond's VFL Reserve team?
+D’une manière similaire, nous recevons également des questions comme : qui était capitaine de l’équipe de réserve VFL de Richmond ?
+
+Or who did graham negate in the grand final last year?
+Ou qui Graham a-t-il invalidé lors de la grande finale l’année dernière ?
+
+Finally, we filter out a subset of the generated queries based on some desired characteristics.
+Enfin, nous filtrons un sous-ensemble des requêtes générées en fonction de certaines caractéristiques souhaitées.
+
+As motivated earlier, we would like to ensure that the new question is still semantically close to the original.
+Comme motivé plus tôt, nous aimerions nous assurer que la nouvelle question est toujours sémantiquement proche de l’originale.
+
+For filtering techniques that doesn't require additional supervision, we simply retain new questions that have a small token label edit distance from the original question.
+Pour les techniques de filtrage qui ne nécessitent pas de supervision supplémentaire, nous conservons simplement de nouvelles questions qui ont une petite distance d’édition de l’étiquette de gage par rapport à la question d’origine.
+
+For example, we remove the question who did graham negate in the grand final last year?
+Par exemple, nous supprimons la question : qui Graham a-t-il invalidé lors de la grande finale l’année dernière ?
+
+Because it has a longer edit distance from the original question.
+Car elle a une distance d’édition plus longue par rapport à la question d’origine.
+
+In our experiments, we demonstrate that this simple heuristic can be used to augment and queue training data.
+Dans nos expériences, nous démontrons que cette heuristique simple peut être utilisée pour améliorer et mettre en file d’attente les données de formation.
+
+We also experiment with a filtering strategy that is based on the type of semantic perturbation.
+Nous expérimentons également une stratégie de filtrage basée sur le type de perturbation sémantique.
+
+To this end, we use a general purpose query decomposition framework called QED.
+À cette fin, nous utilisons un cadre de décomposition de requête à usage général appelé QED.
+
+QED identifies two parts to the question, a predicate and a reference.
+QED identifie deux parties à la question, un prédicat et une référence.
+
+References are noun phrases in the question that correspond to entities in the context.
+Les références sont des syntagmes nominaux dans la question qui correspondent à des entités dans le contexte.
+
+A predicate is basically the remaining portion of the question.
+Un prédicat est essentiellement la partie restante de la question.
+
+For example, we are able to decompose the query who captained Richmond's first ever women's team into two references: Richmond Football Club women's team and the predicate who captained X. A model trained on reference predicate annotations for NQ gives us this question decomposition.
+Par exemple, nous sommes en mesure de décomposer la requête « qui a dirigé la toute première équipe féminine de Richmond en deux références » : l’équipe féminine du Richmond Football Club et le prédicat qui a dirigé X. Un modèle formé sur les annotations du prédicat de référence pour NQ nous fournit cette décomposition de question.
+
+Decomposing both the original and generated question based on QED allows us to categorize our generated counterfactuals for evaluation.
+La décomposition à la fois de la question originale et générée basée sur QED nous permet de catégoriser nos contrefactuels générés pour l’évaluation.
+
+Specifically, we obtain two groups of questions.
+Plus précisément, nous obtenons deux groupes de questions.
+
+Those that undergo a reference change while retaining predicates, and those that undergo a predicate change and optionally add references.
+Ceux qui subissent un changement de référence tout en conservant les prédicats, et ceux qui subissent un changement de prédicat et ajoutent éventuellement des références.
+
+For instance, who captained Richmond's VFL reserve team is a reference change?
+Par exemple, qui a été capitaine de l’équipe de réserve de Richmond VFL est-il un changement de référence ?
+
+While, who wears number nine for the club is a predicate change.
+Alors que, qui porte le numéro neuf pour le club est un changement de prédicat.
+
+We now evaluate the effectiveness of RGF perturbations when augmented to training data.
+Nous évaluons maintenant l’efficacité des perturbations RGF lorsqu’elles sont améliorées par rapport aux données de formation.
+
+So, to effectively evaluate the effectiveness of counterfactual augmentation in particular, we experiment with two strong data augmentation baselines.
+Ainsi, pour évaluer efficacement l’efficacité de l’élargissement contrefactuel en particulier, nous expérimentons deux bases de forte amélioration de données.
+
+The first baseline, called random answer and question generation, adds data that has no relation with the original question.
+La première base, appelée réponse aléatoire et production de questions, ajoute des données qui n’ont pas de relation avec la question originale.
+
+That is, passages and answers are simply randomly sampled from Wikipedia.
+Autrement dit, les passages et les réponses sont simplement échantillonnés au hasard à partir de Wikipédia.
+
+This baseline basically adds more data that looks like NQ.
+Cette base ajoute essentiellement plus de données ressemblant à NQ.
+
+With the second baseline gold answer and question generation, we specifically update the retrieval portion of our method.
+Avec la deuxième réponse d’or de base et la production de questions, nous mettons spécifiquement à jour la partie extraction de notre méthode.
+
+Here, alternate answers are just chosen from the same passage that contained the gold answer.
+Ici, les réponses alternatives sont simplement choisies à partir du même passage qui contenait la réponse d’or.
+
+How base how do the baselines and RGF ah augmentation perform on reading comprehension where the model has access to question and context?
+Comment l’élargissement des bases et du RGF fonctionne sur la reading comprehension où le modèle a accès à la question et au contexte ?
+
+We experiment with six out of domain datasets and present results here, where data is the training data is doubled in augmentation.
+Nous expérimentons avec six données hors domaine et présentons les résultats ici, où les données qui sont les training data sont doublées dans l’élargissement.
+
+We find that both data augmentation baselines are not able to improve our domain generalization.
+Nous constatons que les deux bases d’amélioration de données ne sont pas en mesure d’améliorer notre généralisation du domaine.
+
+In fact, an ensemble of six models trained on the original data seems to be the most competitive baseline.
+En effet, un ensemble de six modèles formés sur les données originales semble être la base la plus compétitive.
+
+Comparing against that baseline, we find that RGF counterfactuals are able to improve out of domain performance while maintaining in domain performance.
+En comparant avec cette base, nous constatons que les contrefactuels RGF sont capables d’améliorer les performances hors domaine tout en maintenant les performances de domaine.
+
+This suggests that filling in the reasoning gaps of the model via counterfactual augmentation is more effective than adding more data from the training distribution.
+Cela suggère que combler les lacunes de raisonnement du modèle via l’élargissement contrefactuel est plus efficace que d’ajouter plus de données de la distribution de formation.
+
+Furthermore, we find that using retrieval to sample alternative outcomes or answers is important for effective CDA.
+En outre, nous constatons que l’utilisation de l’extraction pour échantillonner d’autres résultats ou réponses est importante pour un CDA efficace.
+
+We also experiment with open domain QA setting where the model only sees the question and once again we evaluate on four out of domain datasets.
+Nous expérimentons également un paramètre QA de domaine ouvert où le modèle ne voit que la question et une fois de plus, nous évaluons sur quatre données hors domaine.
+
+We find that baseline models are not as effective for out of domain generalization.
+Nous constatons que les modèles de référence ne sont pas aussi efficaces pour notre généralisation hors domaine.
+
+However, data augmentation with RGF shows more significant improvements.
+Cependant, l’amélioration de données avec RGF montre des améliorations plus significatives.
+
+We even improve in the in domain NQ dataset.
+Nous nous améliorons même dans les données NQ de domaine.
+
+We hypothesized that the counterfactual data augmentation aids the model in learning better query encodings for very similar queries.
+Nous avons émis l’hypothèse que l’amélioration de données contrefactuelle aide le modèle à apprendre de meilleurs encodages de requête pour des requêtes très similaires.
+
+Finally, we also evaluate on the model's ability to improve consistency in the local neighborhood of the original question.
+Enfin, nous évaluons également la capacité du modèle à améliorer la cohérence dans le voisinage local de la question originale.
+
+Consistency measures the proportion of questions correctly answered by the model where both the original and the counterfactual query are correctly answered.
+La cohérence mesure la proportion de questions correctement répondues par le modèle où à la fois la requête originale et celle contrefactuelle reçoivent une réponse correcte.
+
+This explicitly helps us to measure the model's robustness to small perturbations in the neighborhood of the original input.
+Cela nous aide explicitement à mesurer la robustesse du modèle à de petites perturbations dans le voisinage de la saisie originale.
+
+We experiment with five datasets which contain pairs of questions that are semantically close to each other.
+Nous expérimentons avec cinq données qui contiennent des paires de questions sémantiquement proches les unes des autres.
+
+Apart from the three datasets AQA, AmbigQA and QUOREF-Contrast set that are already available, we also evaluate on RGF counterfactuals that are paired with original NQ questions based on whether they underwent a predicate change or reference change.
+Mis à part les trois données AQA, AmbigQA et QUOREF-Contrast définies qui sont déjà disponibles, nous évaluons également sur les contrefactuels RGF qui sont synchronisés avec les questions NQ originales selon qu'elles ont subi un changement de prédicat ou un changement de référence.
+
+These subsets were annotated in-house to eliminate noise and are provided as a resource.
+Ces sous-ensembles ont été annotés en interne pour éliminer le bruit et sont fournis en tant que ressource.
+
+All baselines are unable to significantly improve consistency with the ensemble model improving consistency by a small margin.
+Toutes les bases sont incapables d’améliorer de manière significative la cohérence avec le modèle d’ensemble en améliorant la cohérence d’une petite marge.
+
+However, RGF counterfactual augmentation has impressive gains in consistency both on prior datasets and the two subsets we curated for reference and predicate perturbations.
+Cependant, l’élargissement contrefactuel du RGF a des gains impressionnants en cohérence à la fois sur les données antérieures et les deux sous-ensembles que nous avons sélectionnés pour les perturbations de référence et de prédicat.
+
+Note that the augmented RGF data is not biased by perturbation type, only the evaluation sets are.
+Notez que les données RGF améliorées ne sont pas biaisées par le type de perturbation, seuls les ensembles d’évaluation le sont.
+
+In fact, a qualitative inspection of the kinds of counterfactuals generated show that the generated questions contain several diverse perturbations.
+En effet, une inspection qualitative des types de contrefactuels générés montre que les questions générées contiennent plusieurs perturbations diverses.
+
+For instance, this original question on the population of Walnut Grove, Minnesota is perturbed along different dimensions like town, state, country, and along different predicates like location, poverty, number of schools.
+Par exemple, cette question originale sur la population de Walnut Grove, au Minnesota, est perturbée par différentes dimensions comme la ville, l’État, le pays, et par différents prédicats comme l’emplacement, la pauvreté et le nombre d’écoles.
+
+Audio of perturbations are context specific.
+L’audio des perturbations est spécifique au contexte.
+
+For example, for this other question about the Wimbledon ah singles tournament, the perturbation is along type of game, type of tournament, or the game outcome.
+Par exemple, pour cette autre question sur le tournoi en simple de Wimbledon, la perturbation est liée au type de jeu, au type de tournoi ou au résultat du jeu.
+
+Final takeaways; we tackle the task of counterfactual data augmentation and perturbations for information seeking queries and tackle its unique challenges via a reversal of the generation approach, over generate using near misses of the model and filter based on perturbation type or minimality.
+Derniers points à retenir : nous abordons la tâche d’amélioration des données contrefactuelle et les perturbations pour les requêtes recherchant des informations et abordons ses défis uniques via un renversement de l’approche de génération, et générons plus en utilisant des quasi-accidents du modèle et un filtre basé sur le type de perturbation ou la minimalité.
+
+We find that this technique requires no additional supervision and the examples are labeled for augmentation.
+Nous constatons que cette technique ne nécessite aucune supervision supplémentaire et les exemples sont étiquetés pour l’élargissement.
+
+Augmentation improves out of domain generalization and neighborhood consistency.
+L’élargissement améliore la généralisation de domaine et la cohérence du voisinage.
+
+And we find that RGF counterfactuals are semantically diverse without introducing bias during augmentation.
+Et nous constatons que les contrefactuels RGF sont sémantiquement divers sans introduire de biais lors de l’élargissement.
+
+Thank you.
+Merci.
+

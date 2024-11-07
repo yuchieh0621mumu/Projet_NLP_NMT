@@ -5,7 +5,7 @@
 Ce projet utilise BERTalign pour effectuer l'alignement automatique entre deux corpus bilingues. BERTalign exploite les embeddings contextuels de BERT pour établir des correspondances précises entre les phrases de différentes langues.
 
 ## Description des corpus
-Le projet travaille sur deux corpus parallèles concernant les emprunts lexicaux non assimilés, proposés par nos professeur Lichao Zhu (https://cv.hal.science/lichao-zhu). 
+Le projet travaille sur deux corpus parallèles, déja traités, concernant les emprunts lexicaux non assimilés, proposés par nos professeur Lichao Zhu (https://cv.hal.science/lichao-zhu). 
 La transcription de ces corpus pour l'alignement est basée sur un exposé portant sur cet article : https://aclanthology.org/2022.acl-long.268.pdf.
 
 ### Corpus source (Anglais)
@@ -52,15 +52,10 @@ projet/
 ```
 
 ## Utilisation
-1. Préparation des données :
-   ```bash
-   python scripts/preprocess.py --source data/corpus_source --target data/corpus_cible
-   ```
-
-2. **Lancement de l'alignement** :
+1. **Lancement de l'alignement** :
    Ouvrez le notebook Jupyter `scripts/align.ipynb` dans Jupyter et exécutez chaque cellule pour effectuer le processus d'alignement.
 
-3. **Évaluation des résultats** :
+2. **Évaluation des résultats** :
    Ouvrez le notebook Jupyter `scripts/evaluate.ipynb` dans Jupyter et exécutez chaque cellule pour évaluer les résultats d'alignement dans `data/aligned_output.txt`.
 
 

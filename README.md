@@ -5,7 +5,8 @@
 Ce projet utilise BERTalign pour effectuer l'alignement automatique entre deux corpus bilingues. BERTalign exploite les embeddings contextuels de BERT pour établir des correspondances précises entre les phrases de différentes langues.
 
 ## Description des corpus
-Le projet travaille sur deux corpus parallèles concernant les emprunts lexicaux non assimilés, proposés par nos professeurs. La transcription de ces corpus pour l'alignement est basée sur un exposé portant sur cet article : https://aclanthology.org/2022.acl-long.268.pdf.
+Le projet travaille sur deux corpus parallèles concernant les emprunts lexicaux non assimilés, proposés par nos professeur Lichao Zhu (https://cv.hal.science/lichao-zhu). 
+La transcription de ces corpus pour l'alignement est basée sur un exposé portant sur cet article : https://aclanthology.org/2022.acl-long.268.pdf.
 
 ### Corpus source (Anglais)
 Transcription d'une présentation académique sur la détection des emprunts lexicaux, incluant :
@@ -45,8 +46,8 @@ projet/
 │   ├── ACL.6060.dev.en-xx.fr.cible.txt
 │   └── aligned_output.txt
 ├── scripts/
-│   ├── align.py
-│   └── evaluate.py
+│   ├── align.ipynb
+│   └── evaluate.ipynb
 └── README.md
 ```
 
